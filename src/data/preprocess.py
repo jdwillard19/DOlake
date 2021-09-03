@@ -19,5 +19,5 @@ stat_feats = ["area_surface","max.d"]
 total_df = pd.DataFrame(columns=dyn_feats)
 
 for site_id in site_ids:
-	site_df = pd.read_csv(raw_data_dir+site_id+"/input.txt")
+	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 	pdb.set_trace()
