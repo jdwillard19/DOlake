@@ -13,12 +13,15 @@ dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 			  "volume_epi","volume_hypo","td_area","wind","airtemp",\
 			  "fnep","fmineral","fsed","fatm","fentr_epi","fentr_hyp",\
 			  "o2_epi"]
-stat_feats = ["area_surface","max.d"]
+# stat_feats = ["area_surface","max.d"]
 
  
 #get features and calc stats\
 total_df = pd.DataFrame(columns=dyn_feats)
 
-for site_id in site_ids:
+for i,site_id in enumerate(site_ids):
+	print("site ",i,"/",len(site_ids))
 	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
-	pdb.set_trace()
+	total_df = pd.concat([total_df,site_df])
+
+pdb.set_trace()
