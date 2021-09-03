@@ -11,7 +11,7 @@ site_ids = [x[1] for x in os.walk(raw_data_dir)][0]
 
 dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 			  "volume_epi","volume_hypo","td_area","wind","airtemp",\
-			  "fnep","fmineral","fsed","fatm","fentr_epi","entr_hyp",\
+			  "fnep","fmineral","fsed","fatm","fentr_epi","fentr_hyp",\
 			  "o2_epi"]
 stat_feats = ["area_surface","max.d"]
 
