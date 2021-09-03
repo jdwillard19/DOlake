@@ -6,6 +6,18 @@ import os
 
 #get list of lakes
 raw_data_dir = '../../data/raw/'
-site_ids = [x[0] for x in os.walk(raw_data_dir)]
+site_ids = [x[1] for x in os.walk(raw_data_dir)][0]
 
-pdb.set_trace()
+dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
+			  "volume_epi","volume_hypo","td_area","wind","airtemp",\
+			  "fnep","fmineral","fsed","fatm","fentr_epi","entr_hyp",\
+			  "o2_epi"]
+stat_feats = ["area_surface","max.d"]
+
+ 
+#get features and calc stats\
+total_df = pd.DataFrame(columns=dyn_feats)
+
+for site_id in site_ids:
+	site_df = pd.read_csv(raw_data_dir+site_id)
+	pdb.set_trace()
