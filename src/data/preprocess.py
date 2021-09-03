@@ -5,7 +5,7 @@ import os
 
 
 #get list of lakes
-raw_data_dir = '../../data/raw/'
+raw_data_dir = '../../data/raw/DOzip/'
 site_ids = [x[1] for x in os.walk(raw_data_dir)][0]
 
 dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
