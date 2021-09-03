@@ -20,7 +20,7 @@ total_df = pd.DataFrame(columns=dyn_feats)
 
 for i,site_id in enumerate(site_ids):
 	print("site ",i,"/",len(site_ids))
-	if not os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
+	if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
 		site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 		total_df = pd.concat([total_df,site_df])
 	else:
