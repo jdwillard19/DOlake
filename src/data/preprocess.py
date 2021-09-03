@@ -7,7 +7,7 @@ import os
 #get list of lakes
 raw_data_dir = '../../data/raw/DOzip/'
 site_ids = [x[1] for x in os.walk(raw_data_dir)][0]
-
+dull_lakes = ['nhdhr_120018013','nhdhr_121622916','nhdhr_120020396','nhdhr_121622760']
 dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 			  "volume_epi","volume_hypo","td_area","wind","airtemp",\
 			  "fnep","fmineral","fsed","fatm","fentr_epi","fentr_hyp",\
@@ -25,6 +25,6 @@ for i,site_id in enumerate(site_ids):
 		total_df = pd.concat([total_df,site_df])
 	else:
 		print("no file?")
-		pdb.set_trace()
+		continue
 
 pdb.set_trace()
