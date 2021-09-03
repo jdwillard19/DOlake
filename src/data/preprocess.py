@@ -12,11 +12,12 @@ dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 			  "volume_epi","volume_hypo","td_area","wind","airtemp",\
 			  "fnep","fmineral","fsed","fatm","fentr_epi","fentr_hyp",\
 			  "o2_epi"]
-# stat_feats = ["area_surface","max.d"]
+stat_feats = ["area_surface","max.d"]
+all_feats = dyn_feats + stat_feats
 
  
 #get features and calc stats\
-total_df = pd.DataFrame(columns=dyn_feats)
+total_df = pd.DataFrame(columns=all_feats)
 
 for i,site_id in enumerate(site_ids):
 	print("site ",i,"/",len(site_ids))
