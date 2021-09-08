@@ -18,7 +18,7 @@ all_feats = dyn_feats + stat_feats
 #get features and calc stats\
 total_df = pd.DataFrame(columns=all_feats)
 hardcode = True
-if hardcode:
+if not hardcode:
 	if not os.path.exists("./temp/all_site_feats.feather"):
 		for i,site_id in enumerate(site_ids):
 			print("site ",i,"/",len(site_ids))
