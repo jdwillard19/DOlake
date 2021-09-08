@@ -60,6 +60,6 @@ for i,site_id in enumerate(site_ids):
 	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 	feats = site_df[dyn_feats]
 	dates = site_df['datetime']
-	site_id = site_df['site_id']
+	# site_id = site_df['site_id']
 	pdb.set_trace()
 	# total_df.to_feather("./temp/all_site_feats.feather")
