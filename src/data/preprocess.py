@@ -41,12 +41,12 @@ if not hardcode:
 	std_feats = []
 	for i in range(total_feat_df.shape[1]):
 		print("calc stats feat ",i)
-		if i==15:
-			pdb.set_trace()
+		# if i==15:
+		# 	pdb.set_trace()
 		mean_feats.append(np.nanmean(total_feat_df.iloc[:,i],axis=0))
 		std_feats.append(np.nanstd(total_feat_df.iloc[:,i],axis=0))
 	np.save("temp/mean_feats",np.array(mean_feats))
-	np.save("temp/std_feats",np.array(mean_feats))
+	np.save("temp/std_feats",np.array(std_feats))
 else:
 	total_df = pd.read_feather("./temp/all_site_feats.feather")
 	total_df = total_df.fillna(value=np.nan)
