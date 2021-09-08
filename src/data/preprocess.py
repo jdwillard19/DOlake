@@ -1,4 +1,4 @@
-import numpy as np
+cimport numpy as np
 import pandas as pd
 import pdb
 import os
@@ -18,6 +18,7 @@ all_feats = dyn_feats + stat_feats
 #get features and calc stats\
 total_df = pd.DataFrame(columns=all_feats)
 
+if not os.path.exists("./temp/all_site_feats.feather"):
 for i,site_id in enumerate(site_ids):
 	print("site ",i,"/",len(site_ids))
 	if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
@@ -27,5 +28,15 @@ for i,site_id in enumerate(site_ids):
 	else:
 		print("no file?")
 		continue
+else:
+	total_df = pd.read_feather("./temp/all_site_feats.feather")
+
+total_df = total_df.drop(['date','datetime'],axis=1)
+mean_feats = []
+std_feats = []
+for i in range(total_df.shape[1]):
+	print("feat ",i)
+	mean_feats.append(np.nanmean(total_df.iloc[:,i],axis=0))
+	std_feats.append(np.nanstd(total_df.iloc[:,i],axis=0))
 
 pdb.set_trace()
