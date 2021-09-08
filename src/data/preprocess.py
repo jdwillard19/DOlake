@@ -31,14 +31,12 @@ if not os.path.exists("./temp/all_site_feats.feather"):
 else:
 	total_df = pd.read_feather("./temp/all_site_feats.feather")
 
-total_df = total_df.drop(['date','datetime'],axis=1)
+total_df = total_df.drop(['date','datetime','site_id'],axis=1)
 total_df = total_df.fillna(value=np.nan)
 mean_feats = []
 std_feats = []
 for i in range(total_df.shape[1]):
 	print("feat ",i)
-	if i == 45:
-		pdb.set_trace()
 	mean_feats.append(np.nanmean(total_df.iloc[:,i],axis=0))
 	std_feats.append(np.nanstd(total_df.iloc[:,i],axis=0))
 
