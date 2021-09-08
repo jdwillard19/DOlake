@@ -37,6 +37,8 @@ mean_feats = []
 std_feats = []
 for i in range(total_df.shape[1]):
 	print("feat ",i)
+	if i == 45:
+		pdb.set_trace()
 	mean_feats.append(np.nanmean(total_df.iloc[:,i],axis=0))
 	std_feats.append(np.nanstd(total_df.iloc[:,i],axis=0))
 
