@@ -19,15 +19,15 @@ all_feats = dyn_feats + stat_feats
 total_df = pd.DataFrame(columns=all_feats)
 
 if not os.path.exists("./temp/all_site_feats.feather"):
-for i,site_id in enumerate(site_ids):
-	print("site ",i,"/",len(site_ids))
-	if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
-		site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
-		site_df['site_id'] = site_id
-		total_df = pd.concat([total_df,site_df])
-	else:
-		print("no file?")
-		continue
+	for i,site_id in enumerate(site_ids):
+		print("site ",i,"/",len(site_ids))
+		if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
+			site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
+			site_df['site_id'] = site_id
+			total_df = pd.concat([total_df,site_df])
+		else:
+			print("no file?")
+			continue
 else:
 	total_df = pd.read_feather("./temp/all_site_feats.feather")
 
