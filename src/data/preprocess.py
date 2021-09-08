@@ -64,7 +64,7 @@ if not os.path.exists("../../data/processed"):
 
 for i,site_id in enumerate(site_ids):
 	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
-	feats = site_df[dyn_feats]
+	feats = site_df[all_feats]
 	dates = site_df['datetime']
 	# site_id = site_df['site_id']
 	if not os.path.exists("../../data/processed/"+site_id):
