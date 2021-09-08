@@ -15,7 +15,15 @@ dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 stat_feats = ["area_surface","max.d"]
 all_feats = dyn_feats + stat_feats
 
- 
+# all_dyn_feats_nonan_og = ['wind', 'airtemp', 'fnep', 'fmineral', 'fsed', 'fatm', 'o2_epi']
+# all_dyn_feats_nonan = ['wind', 'airtemp', 'fnep', 'fmineral', 'fsed', 'fatm', 'o2_epi',\
+# 					   'strat','temperature_total'
+# 					   ''
+#replace nan temperature_hypo with temperature_total
+#replace nan volume_hype with volume_total
+#replace nan thermocline depth with zero
+#replace nan td_area with surface area
+all_feats_nonan = all_dyn_feats_nonan + ['area_surface','max.d']
 #get features and calc stats\
 total_df = pd.DataFrame(columns=all_feats)
 hardcode = False
@@ -52,6 +60,19 @@ else:
 	total_df = total_df.fillna(value=np.nan)
 	total_feat_df = total_df.drop(['date','datetime','site_id'],axis=1)
 
+min_seq = 999
+ct = 0
+min_ind = None
+for ind,i in enumerate(total_df['strat'].values):
+	if i == 1:
+		ct += 1
+	else:
+		if ct < min_seq:
+			min_seq = ct
+			min_ind = ind
+		ct = 0
+print("min seq: ",min_seq)
+print("min ind: ",min_ind)
 
 mean_feats = np.array(mean_feats)
 std_feats = np.array(std_feats)
