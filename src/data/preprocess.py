@@ -23,7 +23,7 @@ all_feats = dyn_feats + stat_feats
 #replace nan volume_hype with volume_total
 #replace nan thermocline depth with zero
 #replace nan td_area with surface area
-all_feats_nonan = all_dyn_feats_nonan + ['area_surface','max.d']
+# all_feats_nonan = all_dyn_feats_nonan + ['area_surface','max.d']
 #get features and calc stats\
 total_df = pd.DataFrame(columns=all_feats)
 hardcode = False
