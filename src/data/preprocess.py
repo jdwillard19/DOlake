@@ -35,11 +35,12 @@ if not hardcode:
 		total_df = pd.read_feather("./temp/all_site_feats.feather")
 
 	total_feat_df = total_df.drop(['date','datetime','site_id','fentr_hyp','index'],axis=1)
+	total_feat_df = total_df[all_feats]
 	total_feat_df = total_feat_df.fillna(value=np.nan)
 	mean_feats = []
 	std_feats = []
 	for i in range(total_feat_df.shape[1]):
-		print("feat ",i)
+		print("calc stats feat ",i)
 		mean_feats.append(np.nanmean(total_feat_df.iloc[:,i],axis=0))
 		std_feats.append(np.nanstd(total_feat_df.iloc[:,i],axis=0))
 	np.save("temp/mean_feats",np.array(mean_feats))
@@ -54,12 +55,18 @@ mean_feats = np.array(mean_feats)
 std_feats = np.array(std_feats)
 
 
+#preprocess per site
 
-pdb.set_trace()
+if not os.path.exists("../../data/processed")
+	os.mkdir("../../data/processed")
+
 for i,site_id in enumerate(site_ids):
 	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 	feats = site_df[dyn_feats]
 	dates = site_df['datetime']
 	# site_id = site_df['site_id']
-	pdb.set_trace()
+	if not os.path.exists("../../data/processed/"+site_id):
+		os.mkdir("../../data/processed/"+site_id)
+	
+
 	# total_df.to_feather("./temp/all_site_feats.feather")
