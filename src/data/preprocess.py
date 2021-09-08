@@ -67,7 +67,7 @@ for ind,i in enumerate(total_df['strat'].values):
 	if i == 1:
 		ct += 1
 	else:
-		if ct < min_seq:
+		if ct < min_seq and ct != 0:
 			min_seq = ct
 			min_ind = ind
 		ct = 0
