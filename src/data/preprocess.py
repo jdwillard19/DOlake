@@ -25,7 +25,6 @@ if not hardcode:
 			if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
 				site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 				site_df['site_id'] = site_id
-				pdb.set_trace()
 				total_df = pd.concat([total_df,site_df])
 			else:
 				print("no file?")
@@ -34,17 +33,20 @@ if not hardcode:
 	else:
 		total_df = pd.read_feather("./temp/all_site_feats.feather")
 
-	total_df = total_df.drop(['date','datetime','site_id','fentr_hyp'],axis=1)
-	total_df = total_df.fillna(value=np.nan)
+	total_feat_df = total_df.drop(['date','datetime','site_id','fentr_hyp'],axis=1)
+	total_feat_df = total_feat_df.fillna(value=np.nan)
 	mean_feats = []
 	std_feats = []
-	for i in range(total_df.shape[1]):
+	for i in range(total_feat_df.shape[1]):
 		print("feat ",i)
-		mean_feats.append(np.nanmean(total_df.iloc[:,i],axis=0))
-		std_feats.append(np.nanstd(total_df.iloc[:,i],axis=0))
+		mean_feats.append(np.nanmean(total_feat_df.iloc[:,i],axis=0))
+		std_feats.append(np.nanstd(total_feat_df.iloc[:,i],axis=0))
 	np.save("temp/mean_feats",np.array(mean_feats))
 	np.save("temp/std_feats",np.array(mean_feats))
 else:
 	total_df = pd.read_feather("./temp/all_site_feats.feather")
 	total_df = total_df.fillna(value=np.nan)
 	total_feat_df = total_df.drop(['date','datetime','site_id'],axis=1)
+
+
+pdb.set_trace()
