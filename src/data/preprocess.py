@@ -63,6 +63,7 @@ else:
 min_seq = 999
 ct = 0
 min_ind = None
+seqs = []
 for ind,i in enumerate(total_df['strat'].values):
 	if i == 1:
 		ct += 1
@@ -70,6 +71,9 @@ for ind,i in enumerate(total_df['strat'].values):
 		if ct < min_seq and ct != 0:
 			min_seq = ct
 			min_ind = ind
+		elif ct != 0:
+			seqs.append(ct)
+			
 		ct = 0
 print("min seq: ",min_seq)
 print("min ind: ",min_ind)
