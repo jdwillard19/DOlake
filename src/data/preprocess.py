@@ -57,7 +57,7 @@ std_feats = np.array(std_feats)
 
 #preprocess per site
 
-if not os.path.exists("../../data/processed")
+if not os.path.exists("../../data/processed"):
 	os.mkdir("../../data/processed")
 
 for i,site_id in enumerate(site_ids):
