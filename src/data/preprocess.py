@@ -32,6 +32,7 @@ else:
 	total_df = pd.read_feather("./temp/all_site_feats.feather")
 
 total_df = total_df.drop(['date','datetime'],axis=1)
+total_df = total_df.fillna(value=np.nan)
 mean_feats = []
 std_feats = []
 for i in range(total_df.shape[1]):
