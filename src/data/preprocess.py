@@ -9,8 +9,9 @@ raw_data_dir = '../../data/raw/DOzip/'
 site_ids = np.load("../../metadata/201site_ids.npy",allow_pickle=True)
 dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 			  "volume_epi","volume_hypo","td_area","wind","airtemp",\
-			  "fnep","fmineral","fsed","fatm","fentr_epi","fentr_hyp",\
+			  "fnep","fmineral","fsed","fatm","fentr_epi",\
 			  "o2_epi"]
+			  # fentr_hyp all none?
 stat_feats = ["area_surface","max.d"]
 all_feats = dyn_feats + stat_feats
 
@@ -21,7 +22,7 @@ hardcode = False
 if not hardcode:
 	if not os.path.exists("./temp/all_site_feats.feather"):
 		for i,site_id in enumerate(site_ids):
-			print("site ",i,"/",len(site_ids))
+			print("pre: site ",i,"/",len(site_ids))
 			if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
 				site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 				site_df['site_id'] = site_id
@@ -49,4 +50,16 @@ else:
 	total_feat_df = total_df.drop(['date','datetime','site_id'],axis=1)
 
 
+mean_feats = np.array(mean_feats)
+std_feats = np.array(std_feats)
+
+
+
 pdb.set_trace()
+for i,site_id in enumerate(site_ids):
+	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
+	feats = site_df[dyn_feats]
+	dates = site_df['datetime']
+	site_id = site_df['site_id']
+	pdb.set_trace()
+	# total_df.to_feather("./temp/all_site_feats.feather")
