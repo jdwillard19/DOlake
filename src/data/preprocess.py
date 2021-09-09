@@ -11,21 +11,18 @@ dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 			  "volume_epi","volume_hypo","td_area","wind","airtemp",\
 			  "fnep","fmineral","fsed","fatm","fentr_epi",\
 			  "o2_epi"]
+
 			  # fentr_hyp all none?
 stat_feats = ["area_surface","max.d"]
-obs_pt = ['o2_hypo']
-obs = ['obs_hypo']
+obs_pt = ['o2_hyp']
+obs_name = ['obs_hyp']
+pt_fields = dyn_feats + obs_pt
+trn_test_fields = dyn_feats + obs_name
 all_feats = dyn_feats + stat_feats
 win_shift = 30
-# all_dyn_feats_nonan_og = ['wind', 'airtemp', 'fnep', 'fmineral', 'fsed', 'fatm', 'o2_epi']
-# all_dyn_feats_nonan = ['wind', 'airtemp', 'fnep', 'fmineral', 'fsed', 'fatm', 'o2_epi',\
-# 					   'strat','temperature_total'
-# 					   ''
-#replace nan temperature_hypo with temperature_total
-#replace nan volume_hype with volume_total
-#replace nan thermocline depth with zero
-#replace nan td_area with surface area
-# all_feats_nonan = all_dyn_feats_nonan + ['area_surface','max.d']
+seq_len = 60
+
+
 #get features and calc stats\
 total_df = pd.DataFrame(columns=all_feats)
 hardcode = False
@@ -112,7 +109,6 @@ for i,site_id in enumerate(site_ids):
 				temp_df = pd.DataFrame(site_df.iloc[j-current_window_length+1:j].values,columns = site_df.iloc[j].index)
 				strat_period_list.append(temp_df)
 				print("saved stratification period of length ",current_window_length)
-				pdb.set_trace()
 			#reset df
 			del temp_df
 			temp_df = pd.DataFrame()
@@ -120,6 +116,25 @@ for i,site_id in enumerate(site_ids):
 		else:
 			current_window_length += 1
 			
+	#create sliding windows for pre-train,train, and test
+	pt_data = np.empty((0,seq_len,len(pt_fields)))
+	trn_data = np.empty((0,seq_len,len(trn_test_fields)))
+	tst_data = np.empty((0,seq_len,len(trn_test_fields)))
+
+	#for each strat period, append to data matrices
+	for strat_period in strat_period_list:
+		start_ind = 0
+		end_ind = start_ind + seq_len
+		while end_ind < strat_period.shape[0]:
+			#append to pt data
+			pdb.set_trace()
+
+			#append to train data
+
+			#append to tst data
+
+			start_ind += seq_len
+			end_ind += seq_len
 
 
 
