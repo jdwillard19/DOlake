@@ -111,8 +111,8 @@ for i,site_id in enumerate(site_ids):
 			if current_window_length > 90:
 				#save window
 				strat_period_list.append(temp_df.copy())
-				print("saved stratification period")
-				print(strat_period_list)
+				print("saved stratification period of length ",current_window_length)
+				pdb.set_trace()
 			#reset df
 			del temp_df
 			temp_df = pd.DataFrame()
