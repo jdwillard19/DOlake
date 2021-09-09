@@ -142,8 +142,8 @@ for i,site_id in enumerate(site_ids):
 					if np.where(tmp_df[tmp_df['splitsample']==1])[0].shape[0] != 0:
 						tst_ind_to_del = np.where(tmp_df['splitsample']==1)[0]
 						to_append_trn[:,tst_ind_to_del,-1] = np.nan
-					assert np.isfinite(to_append_trn[:,:,:-1]).all()
-					assert np.isfinite(to_append_trn[:,:,-1]).any()
+					assert pd.notnull(to_append_trn[:,:,:-1]).all()
+					assert pd.notnull(to_append_trn[:,:,-1]).any()
 					trn_data = np.concatenate((trn_data,to_append_trn),axis=0)
 					pdb.set_trace()
 
@@ -155,8 +155,8 @@ for i,site_id in enumerate(site_ids):
 						print("time to delete train obs in test seq")
 						trn_ind_to_del = np.where(tmp_df['splitsample']==0)[0]
 						to_append_tst[:,trn_ind_to_del,-1] = np.nan
-					assert np.isfinite(to_append_tst[:,:,:-1]).all()
-					assert np.isfinite(to_append_tst[:,:,-1]).any()
+					assert pd.notnull(to_append_tst[:,:,:-1]).all()
+					assert pd.notnull(to_append_tst[:,:,-1]).any()
 					tst_data = np.concatenate((tst_data,to_append_tst),axis=0)
 					pdb.set_trace()
 
