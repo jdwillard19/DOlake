@@ -101,14 +101,14 @@ for i,site_id in enumerate(site_ids):
 	strat_period_list = []
 	temp_df = pd.DataFrame()
 	for j in range(site_df.shape[0]):
-		if j % 100 == 0:
-			print("day ",j,"/",site_df.shape[0])
+		# if j % 100 == 0:
+		# 	print("day ",j,"/",site_df.shape[0])
 		if site_df.iloc[j]['strat'] == 0:
 			if current_window_length > 90:
 				#save window
 				temp_df = pd.DataFrame(site_df.iloc[j-current_window_length+1:j].values,columns = site_df.iloc[j].index)
 				strat_period_list.append(temp_df)
-				print("saved stratification period of length ",current_window_length)
+				# print("saved stratification period of length ",current_window_length)
 			#reset df
 			del temp_df
 			temp_df = pd.DataFrame()
@@ -126,7 +126,7 @@ for i,site_id in enumerate(site_ids):
 
 	#for each strat period, append to data matrices
 	for strat_period_ind, strat_period in enumerate(strat_period_list):
-		print("processing strat period ",strat_period_ind,"/",len(strat_period_list))
+		# print("processing strat period ",strat_period_ind,"/",len(strat_period_list))
 		start_ind = 0
 		end_ind = start_ind + seq_len
 		while end_ind < strat_period.shape[0]:
@@ -198,8 +198,32 @@ for i,site_id in enumerate(site_ids):
 					assert pd.notnull(to_append_tst[:,:,-1]).any()
 					tst_data = np.concatenate((tst_data,to_append_tst),axis=0)
 					tst_dates = np.concatenate((tst_dates,to_append_dates),axis=0)
-	print("done for site?")
-	pdb.set_trace()
+	trn_data_norm = trn_data.copy()
+	tst_data_norm = tst_data.copy()
+	pt_data_norm = pt_data.copy()
+	trn_data_norm[:,:,:-1] = (trn_data_norm[:,:,:-1] - mean_feats[:-2]) / std_feats[:-2]
+	tst_data_norm[:,:,:-1] = (tst_data_norm[:,:,:-1] - mean_feats[:-2]) / std_feats[:-2]
+	pt_data_norm[:,:,:-1] = (pt_data_norm[:,:,:-1] - mean_feats[:-2]) / std_feats[:-2]
+
+	pt_data_path = "../../data/processed/"+site_id+"/pt"
+	pt_norm_data_path = "../../data/processed/"+site_id+"/pt_norm"
+	pt_dates_path = "../../data/processed/"+site_id+"/pt_dates"
+	trn_data_path = "../../data/processed/"+site_id+"/trn"
+	trn_norm_data_path = "../../data/processed/"+site_id+"/trn_norm"
+	trn_dates_path = "../../data/processed/"+site_id+"/trn_dates"
+	tst_data_path = "../../data/processed/"+site_id+"/tst"
+	tst_norm_data_path = "../../data/processed/"+site_id+"/tst_norm"
+	tst_dates_path = "../../data/processed/"+site_id+"/tst_dates"
+
+	np.save(pt_data_path,pt_data)
+	np.save(pt_norm_data_path,pt_data_norm)
+	np.save(pt_dates_path,pt_dates)
+	np.save(trn_data_path,trn_data)
+	np.save(trn_norm_data_path,trn_data_norm)
+	np.save(trn_dates_path,trn_dates)
+	np.save(tst_data_path,tst_data)
+	np.save(tst_norm_data_path,tst_data_norm)
+	np.save(tst_dates_path,tst_dates)
 
 
 
