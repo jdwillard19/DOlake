@@ -143,7 +143,9 @@ for i,site_id in enumerate(site_ids):
 				#if test data, append to tst data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==1)).any():
 					print("time to append tst data")
-					if np.where(tmp_trn_df[tmp_trn_df['splitsample']==0])[0].shape[0] != 0:
+					tmp_tst_df = tmp_df.copy()
+
+					if np.where(tmp_tst_df[tmp_tst_df['splitsample']==0])[0].shape[0] != 0:
 						print("time to delete train obs in test seq")
 						pdb.set_trace()
 
