@@ -145,13 +145,12 @@ for i,site_id in enumerate(site_ids):
 					assert pd.notnull(to_append_trn[:,:,:-1]).all()
 					assert pd.notnull(to_append_trn[:,:,-1]).any()
 					trn_data = np.concatenate((trn_data,to_append_trn),axis=0)
-					pdb.set_trace()
 
 				#if test data, append to tst data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==1)).any():
 					print("time to append tst data")
 					to_append_tst = np.expand_dims(tmp_df[trn_test_fields].values,0)
-					if np.where(tmp_tst_df[tmp_tst_df['splitsample']==0])[0].shape[0] != 0:
+					if np.where(tmp_df[tmp_df['splitsample']==0])[0].shape[0] != 0:
 						print("time to delete train obs in test seq")
 						trn_ind_to_del = np.where(tmp_df['splitsample']==0)[0]
 						to_append_tst[:,trn_ind_to_del,-1] = np.nan
