@@ -91,6 +91,7 @@ if not os.path.exists("../../data/processed"):
 	os.mkdir("../../data/processed")
 
 for i,site_id in enumerate(site_ids):
+	print("processing site ",i,"/",len(site_ids),": ",site_id)
 	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 	feats = site_df[all_feats]
 	dates = site_df['datetime']
@@ -104,10 +105,14 @@ for i,site_id in enumerate(site_ids):
 	temp_df = pd.DataFrame()
 	pdb.set_trace()
 	for j in range(site_df.shape[0]):
+		if j % 100 == 0:
+			print("day ",j,"/",site_df.shape[0])
 		if site_df.iloc[j]['strat'] == 0:
 			if current_window_length > 90:
 				#save window
 				strat_period_list.append(temp_df.copy())
+				print("saved stratification period")
+				print(strat_period_list)
 			#reset df
 			del temp_df
 			temp_df = pd.DataFrame()
