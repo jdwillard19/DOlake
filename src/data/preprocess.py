@@ -157,11 +157,10 @@ for i,site_id in enumerate(site_ids):
 					assert pd.notnull(to_append_tst[:,:,:-1]).all()
 					assert pd.notnull(to_append_tst[:,:,-1]).any()
 					tst_data = np.concatenate((tst_data,to_append_tst),axis=0)
-					pdb.set_trace()
 
 			start_ind += seq_len
 			end_ind += seq_len
-		if not end_ind % seq_len == 0:
+		if not strat_period.shape[0] % seq_len == 0:
 			print("get last index seq now..")
 			end_ind = strat_period.shape[0] - 1
 			start_ind = end_ind - seq_len
