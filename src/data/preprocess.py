@@ -132,7 +132,6 @@ for i,site_id in enumerate(site_ids):
 			#if no obs, continue
 			if pd.isnull(strat_period[start_ind:end_ind]['obs_hyp']).all():
 				print("no obs in seq")
-				continue
 			else:
 				#if train data, append to train data
 				if ((not pd.isnull(strat_period[start_ind:end_ind]['obs_hyp']).all()) & (strat_period[start_ind:end_ind]['splitsample']==0)).any():
