@@ -134,10 +134,7 @@ for i,site_id in enumerate(site_ids):
 			pt_data = np.concatenate((pt_data,to_append_pt),axis=0)
 			tmp_df = strat_period[start_ind:end_ind]
 			#if no obs, continue
-			if pd.isnull(tmp_df['obs_hyp']).all():
-				continue
-				# print("no obs in seq")
-			else:
+			if not pd.isnull(tmp_df['obs_hyp']).all():
 				to_append_dates = np.expand_dims(tmp_df['datetime'].values,0)
 
 				#if train data, append to train data
@@ -176,10 +173,7 @@ for i,site_id in enumerate(site_ids):
 			pt_data = np.concatenate((pt_data,to_append_pt),axis=0)
 			tmp_df = strat_period[start_ind:end_ind]
 			#if no obs, continue
-			if pd.isnull(tmp_df['obs_hyp']).all():
-				# print("no obs in seq")
-				continue
-			else:
+			if not pd.isnull(tmp_df['obs_hyp']).all():
 				to_append_dates = np.expand_dims(tmp_df['datetime'].values,0)
 				#if train data, append to train data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==0)).any():
