@@ -134,13 +134,14 @@ for i,site_id in enumerate(site_ids):
 			tmp_df = strat_period[start_ind:end_ind]
 			#if no obs, continue
 			if pd.isnull(tmp_df['obs_hyp']).all():
-				print("no obs in seq")
+				continue
+				# print("no obs in seq")
 			else:
 				to_append_dates = np.expand_dims(tmp_df['datetime'].values,0)
 
 				#if train data, append to train data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==0)).any():
-					print("time to append trn data")
+					# print("time to append trn data")
 					to_append_trn = np.expand_dims(tmp_df[trn_test_fields].values,0)
 					#delete test data in train seq
 					if np.where(tmp_df[tmp_df['splitsample']==1])[0].shape[0] != 0:
@@ -149,15 +150,14 @@ for i,site_id in enumerate(site_ids):
 					assert pd.notnull(to_append_trn[:,:,:-1]).all()
 					assert pd.notnull(to_append_trn[:,:,-1]).any()
 					trn_data = np.concatenate((trn_data,to_append_trn),axis=0)
-					pdb.set_trace()
 					trn_dates = np.concatenate((trn_dates,to_append_dates),axis=0)
 
 				#if test data, append to tst data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==1)).any():
-					print("time to append tst data")
+					# print("time to append tst data")
 					to_append_tst = np.expand_dims(tmp_df[trn_test_fields].values,0)
 					if np.where(tmp_df[tmp_df['splitsample']==0])[0].shape[0] != 0:
-						print("time to delete train obs in test seq")
+						# print("time to delete train obs in test seq")
 						trn_ind_to_del = np.where(tmp_df['splitsample']==0)[0]
 						to_append_tst[:,trn_ind_to_del,-1] = np.nan
 					assert pd.notnull(to_append_tst[:,:,:-1]).all()
@@ -176,7 +176,8 @@ for i,site_id in enumerate(site_ids):
 			tmp_df = strat_period[start_ind:end_ind]
 			#if no obs, continue
 			if pd.isnull(tmp_df['obs_hyp']).all():
-				print("no obs in seq")
+				# print("no obs in seq")
+				continue
 			else:
 				to_append_dates = np.expand_dims(tmp_df['datetime'].values,0)
 				#if train data, append to train data
@@ -195,7 +196,7 @@ for i,site_id in enumerate(site_ids):
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==1)).any():
 					to_append_tst = np.expand_dims(tmp_df[trn_test_fields].values,0)
 					if np.where(tmp_df[tmp_df['splitsample']==0])[0].shape[0] != 0:
-						print("time to delete train obs in test seq")
+						# print("time to delete train obs in test seq")
 						trn_ind_to_del = np.where(tmp_df['splitsample']==0)[0]
 						to_append_tst[:,trn_ind_to_del,-1] = np.nan
 					assert pd.notnull(to_append_tst[:,:,:-1]).all()
