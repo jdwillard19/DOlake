@@ -119,7 +119,7 @@ for i,site_id in enumerate(site_ids):
 			current_window_length = 0
 		else:
 			current_window_length += 1
-			temp_df = pd.concat([temp_df,site_df.iloc[j,:]])
+			temp_df = pd.concat([temp_df,site_df.iloc[j,:]],axis=1)
 
 
 
