@@ -62,23 +62,24 @@ else:
 	total_df = total_df.fillna(value=np.nan)
 	total_feat_df = total_df.drop(['date','datetime','site_id'],axis=1)
 
-min_seq = 999
-ct = 0
-min_ind = None
-seqs = []
-for ind,i in enumerate(total_df['strat'].values):
-	if i == 1:
-		ct += 1
-	else:
-		if ct < min_seq and ct != 0:
-			min_seq = ct
-			min_ind = ind
-		elif ct != 0:
-			seqs.append(ct)
+#code to check number of stratification sequences
+# min_seq = 999
+# ct = 0
+# min_ind = None
+# seqs = []
+# for ind,i in enumerate(total_df['strat'].values):
+# 	if i == 1:
+# 		ct += 1
+# 	else:
+# 		if ct < min_seq and ct != 0:
+# 			min_seq = ct
+# 			min_ind = ind
+# 		elif ct != 0:
+# 			seqs.append(ct)
 
-		ct = 0
-print("min seq: ",min_seq)
-print("min ind: ",min_ind)
+# 		ct = 0
+# print("min seq: ",min_seq)
+# print("min ind: ",min_ind)
 
 mean_feats = np.array(mean_feats)
 std_feats = np.array(std_feats)
@@ -96,7 +97,7 @@ for i,site_id in enumerate(site_ids):
 	# site_id = site_df['site_id']
 	if not os.path.exists("../../data/processed/"+site_id):
 		os.mkdir("../../data/processed/"+site_id)
-
+n
 	#create one df per statification period > 90 days
 	current_window_length = 0
 	strat_period_list = []
@@ -110,6 +111,7 @@ for i,site_id in enumerate(site_ids):
 			#reset df
 			del temp_df
 			temp_df = pd.DataFrame()
+			current_window_length = 0
 		else:
 			current_window_length += 1
 			temp_df = pd.concat([temp_df,site_df.iloc[j,:]])
