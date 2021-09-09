@@ -149,6 +149,7 @@ for i,site_id in enumerate(site_ids):
 					assert pd.notnull(to_append_trn[:,:,:-1]).all()
 					assert pd.notnull(to_append_trn[:,:,-1]).any()
 					trn_data = np.concatenate((trn_data,to_append_trn),axis=0)
+					pdb.set_trace()
 					trn_dates = np.concatenate((trn_dates,to_append_dates),axis=0)
 
 				#if test data, append to tst data
