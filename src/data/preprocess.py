@@ -136,23 +136,36 @@ for i,site_id in enumerate(site_ids):
 				#if train data, append to train data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==0)).any():
 					print("time to append trn data")
-					tmp_trn_df = tmp_df.copy()
-					if np.where(tmp_trn_df[tmp_trn_df['splitsample']==1])[0].shape[0] != 0:
-						print("time to delete test obs in trian seq")
-						pdb.set_trace()
+					to_append_trn = np.expand_dims(tmp_df[trn_test_fields].values,0)
+
+					#delete test data in train seq
+					if np.where(tmp_df[tmp_df['splitsample']==1])[0].shape[0] != 0:
+						tst_ind_to_del = np.where(tmp_df['splitsample']==1)[0]
+						to_append_trn[:,tst_ind_to_del,-1] = np.nan
+					assert np.isfinite(to_append_trn[:,:,:-1]).all()
+					assert np.isfinite(to_append_trn[:,:,-1]).any()
+					trn_data = np.concatenate((trn_data,to_append_trn),axis=0)
+					pdb.set_trace()
+
 				#if test data, append to tst data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==1)).any():
 					print("time to append tst data")
-					tmp_tst_df = tmp_df.copy()
-
+					to_append_tst = np.expand_dims(tmp_df[trn_test_fields].values,0)
 					if np.where(tmp_tst_df[tmp_tst_df['splitsample']==0])[0].shape[0] != 0:
 						print("time to delete train obs in test seq")
-						pdb.set_trace()
+						trn_ind_to_del = np.where(tmp_df['splitsample']==0)[0]
+						to_append_tst[:,trn_ind_to_del,-1] = np.nan
+					assert np.isfinite(to_append_tst[:,:,:-1]).all()
+					assert np.isfinite(to_append_tst[:,:,-1]).any()
+					tst_data = np.concatenate((tst_data,to_append_tst),axis=0)
+					pdb.set_trace()
 
 			start_ind += seq_len
 			end_ind += seq_len
 		if not end_ind % seq_len == 0:
-			print("get index seq now..")
+			print("get last index seq now..")
+			end_ind = strat_period.shape[0] - 1
+			start_ind = end_ind - seq_len
 			pdb.set_trace()
 
 
