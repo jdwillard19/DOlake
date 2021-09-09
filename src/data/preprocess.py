@@ -103,14 +103,14 @@ for i,site_id in enumerate(site_ids):
 	current_window_length = 0
 	strat_period_list = []
 	temp_df = pd.DataFrame()
-	pdb.set_trace()
 	for j in range(site_df.shape[0]):
 		if j % 100 == 0:
 			print("day ",j,"/",site_df.shape[0])
 		if site_df.iloc[j]['strat'] == 0:
 			if current_window_length > 90:
 				#save window
-				strat_period_list.append(temp_df.copy())
+				temp_df = pd.DataFrame(site_df.iloc[j-current_window_length+1:j].values,columns = site_df.iloc[j].index)
+				strat_period_list.append(temp_df)
 				print("saved stratification period of length ",current_window_length)
 				pdb.set_trace()
 			#reset df
@@ -119,8 +119,7 @@ for i,site_id in enumerate(site_ids):
 			current_window_length = 0
 		else:
 			current_window_length += 1
-			pdb.set_trace()
-			temp_df = pd.concat([temp_df,site_df.iloc[j,:]],axis=0)
+			
 
 
 
