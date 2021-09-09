@@ -13,8 +13,10 @@ dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 			  "o2_epi"]
 			  # fentr_hyp all none?
 stat_feats = ["area_surface","max.d"]
+obs_pt = ['o2_hypo']
+obs = ['obs_hypo']
 all_feats = dyn_feats + stat_feats
-
+win_shift = 30
 # all_dyn_feats_nonan_og = ['wind', 'airtemp', 'fnep', 'fmineral', 'fsed', 'fatm', 'o2_epi']
 # all_dyn_feats_nonan = ['wind', 'airtemp', 'fnep', 'fmineral', 'fsed', 'fatm', 'o2_epi',\
 # 					   'strat','temperature_total'
@@ -73,7 +75,7 @@ for ind,i in enumerate(total_df['strat'].values):
 			min_ind = ind
 		elif ct != 0:
 			seqs.append(ct)
-			
+
 		ct = 0
 print("min seq: ",min_seq)
 print("min ind: ",min_ind)
@@ -94,7 +96,24 @@ for i,site_id in enumerate(site_ids):
 	# site_id = site_df['site_id']
 	if not os.path.exists("../../data/processed/"+site_id):
 		os.mkdir("../../data/processed/"+site_id)
+
+	#create one df per statification period > 90 days
+	current_window_length = 0
+	strat_period_list = []
+	temp_df = pd.DataFrame()
 	pdb.set_trace()
-	
+	for j in range(site_df.shape[0]):
+		if site_df.iloc[j]['strat'] == 0:
+			if current_window_length > 90:
+				#save window
+				strat_period_list.append(temp_df.copy())
+			#reset df
+			del temp_df
+			temp_df = pd.DataFrame()
+		else:
+			current_window_length += 1
+			temp_df = pd.concat([temp_df,site_df.iloc[j,:]])
+
+
 
 	# total_df.to_feather("./temp/all_site_feats.feather")
