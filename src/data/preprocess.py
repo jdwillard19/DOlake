@@ -126,15 +126,27 @@ for i,site_id in enumerate(site_ids):
 		start_ind = 0
 		end_ind = start_ind + seq_len
 		while end_ind < strat_period.shape[0]:
-			#append to pt data
 			pdb.set_trace()
+			pt_data = np.concatenate((pt_data,np.expand_dims(strat_period[start_ind:end_ind][pt_fields].values,0)),axis=0)
 
-			#append to train data
-
-			#append to tst data
+			#if no obs, continue
+			if pd.isnull(strat_period[start_ind:end_ind]['obs_hyp']).all():
+				continue
+			else:
+				#if train data, append to train data
+				if ((not pd.isnull(strat_period[start_ind:end_ind]['obs_hyp']).all()) & (strat_period[start_ind:end_ind]['splitsample']==0)).any():
+					print("time to append trn data")
+					pdb.set_trace()
+				#if test data, append to tst data
+				if ((not pd.isnull(strat_period[start_ind:end_ind]['obs_hyp']).all()) & (strat_period[start_ind:end_ind]['splitsample']==1)).any():
+					print("time to append trn data")
+					pdb.set_trace()
 
 			start_ind += seq_len
 			end_ind += seq_len
+		if not end_ind % seq_len == 0:
+			print("get index seq now..")
+			pdb.set_trace()
 
 
 
