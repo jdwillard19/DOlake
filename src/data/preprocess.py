@@ -126,20 +126,26 @@ for i,site_id in enumerate(site_ids):
 		start_ind = 0
 		end_ind = start_ind + seq_len
 		while end_ind < strat_period.shape[0]:
-			pt_data = np.concatenate((pt_data,np.expand_dims(strat_period[start_ind:end_ind][pt_fields].values,0)),axis=0)
-
+			to_append_pt = np.expand_dims(strat_period[start_ind:end_ind][pt_fields].values,0)
+			pt_data = np.concatenate((pt_data,to_append_pt),axis=0)
+			tmp_df = strat_period[start_ind:end_ind]
 			#if no obs, continue
-			if pd.isnull(strat_period[start_ind:end_ind]['obs_hyp']).all():
+			if pd.isnull(tmp_df['obs_hyp']).all():
 				print("no obs in seq")
 			else:
 				#if train data, append to train data
-				if ((not pd.isnull(strat_period[start_ind:end_ind]['obs_hyp']).all()) & (strat_period[start_ind:end_ind]['splitsample']==0)).any():
+				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==0)).any():
 					print("time to append trn data")
-					pdb.set_trace()
+					tmp_trn_df = tmp_df.copy()
+					if np.where(tmp_trn_df[tmp_trn_df['splitsample']==1])[0].shape[0] != 0:
+						print("time to delete test obs in trian seq")
+						pdb.set_trace()
 				#if test data, append to tst data
-				if ((not pd.isnull(strat_period[start_ind:end_ind]['obs_hyp']).all()) & (strat_period[start_ind:end_ind]['splitsample']==1)).any():
-					print("time to append trn data")
-					pdb.set_trace()
+				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==1)).any():
+					print("time to append tst data")
+					if np.where(tmp_trn_df[tmp_trn_df['splitsample']==0])[0].shape[0] != 0:
+						print("time to delete train obs in test seq")
+						pdb.set_trace()
 
 			start_ind += seq_len
 			end_ind += seq_len
