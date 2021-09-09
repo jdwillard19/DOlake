@@ -126,10 +126,12 @@ for i,site_id in enumerate(site_ids):
 		start_ind = 0
 		end_ind = start_ind + seq_len
 		while end_ind < strat_period.shape[0]:
+			pdb.set_trace()
 			pt_data = np.concatenate((pt_data,np.expand_dims(strat_period[start_ind:end_ind][pt_fields].values,0)),axis=0)
 
 			#if no obs, continue
 			if pd.isnull(strat_period[start_ind:end_ind]['obs_hyp']).all():
+				print("no obs in seq")
 				continue
 			else:
 				#if train data, append to train data
