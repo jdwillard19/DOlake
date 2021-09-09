@@ -118,11 +118,11 @@ for i,site_id in enumerate(site_ids):
 			
 	#create sliding windows for pre-train,train, and test
 	pt_data = np.empty((0,seq_len,len(pt_fields)))
-	pt_dates = np.empty((0,seq_len))
+	pt_dates = np.empty((0,seq_len),dtype=np.object)
 	trn_data = np.empty((0,seq_len,len(trn_test_fields)))
-	trn_dates = np.empty((0,seq_len))
+	trn_dates = np.empty((0,seq_len),dtype=np.object)
 	tst_data = np.empty((0,seq_len,len(trn_test_fields)))
-	tst_dates = np.empty((0,seq_len))
+	tst_dates = np.empty((0,seq_len),dtype=np.object)
 
 	#for each strat period, append to data matrices
 	for strat_period in strat_period_list:
