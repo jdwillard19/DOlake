@@ -97,7 +97,7 @@ for i,site_id in enumerate(site_ids):
 	# site_id = site_df['site_id']
 	if not os.path.exists("../../data/processed/"+site_id):
 		os.mkdir("../../data/processed/"+site_id)
-n
+
 	#create one df per statification period > 90 days
 	current_window_length = 0
 	strat_period_list = []
