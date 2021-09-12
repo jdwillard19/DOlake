@@ -88,8 +88,10 @@ if not os.path.exists("../../data/processed"):
 	os.mkdir("../../data/processed")
 
 for i,site_id in enumerate(site_ids):
+	site_id = 'nhdhr_120018027'
 	print("processing site ",i,"/",len(site_ids),": ",site_id)
 	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
+	pdb.set_trace()
 	feats = site_df[all_feats]
 	dates = site_df['datetime']
 	# site_id = site_df['site_id']
@@ -100,6 +102,7 @@ for i,site_id in enumerate(site_ids):
 	current_window_length = 0
 	strat_period_list = []
 	temp_df = pd.DataFrame()
+
 	for j in range(site_df.shape[0]):
 		# if j % 100 == 0:
 		# 	print("day ",j,"/",site_df.shape[0])
