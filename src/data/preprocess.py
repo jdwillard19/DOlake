@@ -127,6 +127,7 @@ for i,site_id in enumerate(site_ids):
 	tst_dates = np.empty((0,seq_len),dtype=np.datetime64)
 
 	#for each strat period, append to data matrices
+	pdb.set_trace()
 	for strat_period_ind, strat_period in enumerate(strat_period_list):
 		# print("processing strat period ",strat_period_ind,"/",len(strat_period_list))
 		start_ind = 0
