@@ -335,12 +335,12 @@ if pretrain:
             optimizer.zero_grad()
 
             #print statistics
-            running_loss += loss.item()
-            if verbose:
-                if i % 3 == 2:
-                    print('[%d, %5d] loss: %.3f' %
-                         (epoch + 1, i + 1, running_loss / 3))
-                    running_loss = 0.0
+            # running_loss += loss.item()
+            # if verbose:
+            #     if i % 3 == 2:
+            #         print('[%d, %5d] loss: %.3f' %
+            #              (epoch + 1, i + 1, running_loss / 3))
+            #         running_loss = 0.0
         avg_loss = avg_loss / batches_done
 
         if verbose:
