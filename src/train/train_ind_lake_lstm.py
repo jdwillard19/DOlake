@@ -622,7 +622,7 @@ for epoch in range(train_epochs):
         reg1_loss = 0
         if lambda1 > 0:
             reg1_loss = calculate_l1_loss(lstm_net)
-
+        pdb.set_trace()
         loss = mse_criterion(loss_outputs, loss_targets) + lambda1*reg1_loss
 
 
