@@ -558,7 +558,6 @@ manualSeed = [random.randint(1, 99999999) for i in range(train_epochs)]
 
 
 
-convergence variables
 
 min_tst_rmse = 999
 min_tst_epoch = -1
