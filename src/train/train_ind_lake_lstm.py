@@ -103,7 +103,6 @@ trn_dates = np.load(trn_dates_path, allow_pickle=True)
 tst_data_raw = torch.from_numpy(np.array(np.load(tst_data_path,allow_pickle=True),dtype=np.float32))
 tst_data = torch.from_numpy(np.array(np.load(tst_norm_data_path,allow_pickle=True),dtype=np.float32))
 tst_dates = np.load(tst_dates_path, allow_pickle=True)
-pdb.set_trace()
 ###############################
 # data preprocess
 ##################################
@@ -576,7 +575,7 @@ for epoch in range(train_epochs):
     #reload loader for shuffle
     #batch samplers used to draw samples in dataloaders
     batch_sampler = pytorch_data_operations.ContiguousBatchSampler(batch_size, n_batches)
-    trainloader = DataLoader(trn_data, batch_sampler=batch_sampler, pin_memory=True)
+    trainloader = DataLoader(train_data, batch_sampler=batch_sampler, pin_memory=True)
 
 
     #zero the parameter gradients
