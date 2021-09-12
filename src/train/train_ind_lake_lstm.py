@@ -167,7 +167,7 @@ pretrain_data = OxygenTrainDataset(pt_data)
 # total_data = TotalModelOutputDataset(all_data, all_phys_data, all_dates)
 n_batches = math.floor(trn_data.size()[0] / batch_size)
 
-assert yhat_batch_size == n_depths
+# assert yhat_batch_size == n_depths
 
 #batch samplers used to draw samples in dataloaders
 batch_sampler = pytorch_data_operations.ContiguousBatchSampler(batch_size, n_batches)
