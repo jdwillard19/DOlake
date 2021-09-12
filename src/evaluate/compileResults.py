@@ -5,8 +5,11 @@ site_ids = np.load("../../metadata/201site_ids.npy",allow_pickle=True)
 raw_data_dir = '../../data/raw/DOzip/'
 process_rmses = []
 
+sites_without_data = ['nhdhr_121857622','nhdhr_120018361','nhdhr_126212479','nhdhr_120018006']
+site_ids = site_ids[~np.isin(site_ids,sites_without_data)]
 def rmse(pred,targ):
 	return np.sqrt(((pred - targ)**2).mean())
+
 for ct, site_id in enumerate(site_ids):
 	print(ct,"/",len(site_ids), " sites: ",site_id)
 	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
