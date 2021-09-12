@@ -83,15 +83,15 @@ print("lake: "+lakename)
 data_dir = "../../data/processed/"+lakename+"/"
 
 #data paths
-pt_data_path = "../../data/processed/"+site_id+"/pt"
-pt_norm_data_path = "../../data/processed/"+site_id+"/pt_norm"
-pt_dates_path = "../../data/processed/"+site_id+"/pt_dates"
-trn_data_path = "../../data/processed/"+site_id+"/trn"
-trn_norm_data_path = "../../data/processed/"+site_id+"/trn_norm"
-trn_dates_path = "../../data/processed/"+site_id+"/trn_dates"
-tst_data_path = "../../data/processed/"+site_id+"/tst"
-tst_norm_data_path = "../../data/processed/"+site_id+"/tst_norm"
-tst_dates_path = "../../data/processed/"+site_id+"/tst_dates"
+pt_data_path = "../../data/processed/"+site_id+"/pt.npy"
+pt_norm_data_path = "../../data/processed/"+site_id+"/pt_norm.npy"
+pt_dates_path = "../../data/processed/"+site_id+"/pt_dates.npy"
+trn_data_path = "../../data/processed/"+site_id+"/trn.npy"
+trn_norm_data_path = "../../data/processed/"+site_id+"/trn_norm.npy"
+trn_dates_path = "../../data/processed/"+site_id+"/trn_dates.npy"
+tst_data_path = "../../data/processed/"+site_id+"/tst.npy"
+tst_norm_data_path = "../../data/processed/"+site_id+"/tst_norm.npy"
+tst_dates_path = "../../data/processed/"+site_id+"/tst_dates.npy"
 
 #data
 pt_data_raw = np.load(pt_data_path)
