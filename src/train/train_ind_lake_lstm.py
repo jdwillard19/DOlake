@@ -65,7 +65,7 @@ patience = 100
 
 n_hidden = 128 #fixed
 train_epochs = 10000
-pretrain_epochs = 300
+pretrain_epochs = 10000
 
 unsup_loss_cutoff = 40
 dc_unsup_loss_cutoff = 1e-3
