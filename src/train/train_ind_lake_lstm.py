@@ -609,6 +609,8 @@ for epoch in range(train_epochs):
         outputs, h_state = lstm_net(inputs, h_state)
         outputs = outputs.view(outputs.size()[0],-1)
 
+        loss_indices = torch.from_numpy(np.array(np.isfinite(targets.cpu()), dtype='bool_'))
+
         loss_outputs = outputs[:,begin_loss_ind:]
         loss_targets = targets[:,begin_loss_ind:]
 
@@ -622,8 +624,8 @@ for epoch in range(train_epochs):
         reg1_loss = 0
         if lambda1 > 0:
             reg1_loss = calculate_l1_loss(lstm_net)
-        pdb.set_trace()
-        loss = mse_criterion(loss_outputs, loss_targets) + lambda1*reg1_loss
+
+        loss = mse_criterion(outputs[loss_indices], targets[loss_indices]) + lambda1*reg1_loss
 
 
         avg_loss += loss
