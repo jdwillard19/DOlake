@@ -160,8 +160,8 @@ pretrain_data = OxygenTrainDataset(pt_data)
 #get depth area percent data, not used
 # depth_areas = torch.from_numpy(hypsography).float().flatten()
 
-if use_gpu:
-    depth_areas = depth_areas.cuda()
+# if use_gpu:
+    # depth_areas = depth_areas.cuda()
 
 #format total y-hat data for loading
 # total_data = TotalModelOutputDataset(all_data, all_phys_data, all_dates)
