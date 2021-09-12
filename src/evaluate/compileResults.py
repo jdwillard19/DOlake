@@ -11,5 +11,9 @@ for site_id in site_ids:
 	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 
 	#filter to test obs
-	site_df = site_df[site_df['splitsample']==1]
-	pdb.set_trace()
+	site_df = site_df[(site_df['splitsample']==1) & (pd.notnull(site_df['obs_hyp']))]
+
+	process_rmses.append(rmse(site_df['obs_hyp'], site_df['o2_hyp']))
+
+
+pdb.set_trace()
