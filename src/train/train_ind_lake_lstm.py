@@ -94,16 +94,15 @@ tst_norm_data_path = "../../data/processed/"+site_id+"/tst_norm.npy"
 tst_dates_path = "../../data/processed/"+site_id+"/tst_dates.npy"
 
 #data
-pt_data_raw = torch.from_numpy(np.load(pt_data_path,allow_pickle=True))
-pt_data = torch.from_numpy(np.load(pt_norm_data_path,allow_pickle=True))
+pt_data_raw = torch.from_numpy(np.array(np.load(pt_data_path,allow_pickle=True),dtype=np.float32))
+pt_data = torch.from_numpy(np.array(np.load(pt_norm_data_path,allow_pickle=True),dtype=np.float32))
 pt_dates = np.load(pt_dates_path,allow_pickle=True)
-trn_data_raw = torch.from_numpy(np.load(trn_data_path,allow_pickle=True))
-trn_data = torch.from_numpy(np.load(trn_norm_data_path,allow_pickle=True))
+trn_data_raw = torch.from_numpy(np.array(np.load(trn_data_path,allow_pickle=True),dtype=np.float32))
+trn_data = torch.from_numpy(np.array(np.load(trn_norm_data_path,allow_pickle=True),dtype=np.float32))
 trn_dates = np.load(trn_dates_path, allow_pickle=True)
-tst_data_raw = torch.from_numpy(np.load(tst_data_path,allow_pickle=True))
-tst_data = torch.from_numpy(np.load(tst_norm_data_path,allow_pickle=True))
+tst_data_raw = torch.from_numpy(np.array(np.load(tst_data_path,allow_pickle=True),dtype=np.float32))
+tst_data = torch.from_numpy(np.array(np.load(tst_norm_data_path,allow_pickle=True),dtype=np.float32))
 tst_dates = np.load(tst_dates_path, allow_pickle=True)
-pdb.set_trace()
 ###############################
 # data preprocess
 ##################################
