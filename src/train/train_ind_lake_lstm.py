@@ -258,8 +258,8 @@ min_tst_epoch = -1
 ####################################################################
 if pretrain:
     for epoch in range(pretrain_epochs):
-        if verbose:
-            print("pretrain epoch: ", epoch)
+        # if verbose:
+        print("pretrain epoch: ", epoch)
         torch.manual_seed(manualSeed[epoch])
         if use_gpu:
             torch.cuda.manual_seed_all(manualSeed[epoch])
