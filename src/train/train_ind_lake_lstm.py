@@ -288,11 +288,9 @@ if pretrain:
         #     unsup_depths = None
         #     unsup_dates = None
     #     unsup_labels = None
-        for j, b in enumerate(batches):
-            inputs, targets = b
-
-
-
+        for m, data in enumerate(trainloader, 0):
+            inputs = data[0].float()
+            targets = data[1].float()
             #cuda commands
             if(use_gpu):
                 inputs = inputs.cuda()
