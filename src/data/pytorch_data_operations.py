@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import math
 import sys
-import phys_operations
 import datetime
 from datetime import date
 import os
@@ -1598,78 +1597,9 @@ def calculate_lake_energy_deltas(energies, combine_days, surface_area):
 
 
 
-def calculate_energy_fluxes(phys, surf_temps, combine_days):
-    # print("surface_depth = ", phys[0:5,1])
-    fluxes = torch.empty_like(phys[:-combine_days-1,0])
-
-    time = 86400 #seconds per day
-    surface_area = 39865825 
-
-    e_s = 0.985 #emissivity of water, given by Jordan
-    alpha_sw = 0.07 #shortwave albedo, given by Jordan Read
-    alpha_lw = 0.03 #longwave, albeda, given by Jordan Read
-    sigma = 5.67e-8 #Stefan-Baltzmann constant
-    R_sw_arr = phys[:-1,2] + (phys[1:,2]-phys[:-1,2])/2
-    R_lw_arr = phys[:-1,3] + (phys[1:,3]-phys[:-1,3])/2
-    R_lw_out_arr = e_s*sigma*(torch.pow(surf_temps[:]+273.15, 4))
-    R_lw_out_arr = R_lw_out_arr[:-1] + (R_lw_out_arr[1:]-R_lw_out_arr[:-1])/2
-
-    air_temp = phys[:-1,4] 
-    air_temp2 = phys[1:,4]
-    rel_hum = phys[:-1,5]
-    rel_hum2 = phys[1:,5]
-    ws = phys[:-1, 6]
-    ws2 = phys[1:,6]
-    t_s = surf_temps[:-1]
-    t_s2 = surf_temps[1:]
-    E = phys_operations.calculate_heat_flux_latent(t_s, air_temp, rel_hum, ws)
-    H = phys_operations.calculate_heat_flux_sensible(t_s, air_temp, rel_hum, ws)
-    E2 = phys_operations.calculate_heat_flux_latent(t_s2, air_temp2, rel_hum2, ws2)
-    H2 = phys_operations.calculate_heat_flux_sensible(t_s2, air_temp2, rel_hum2, ws2)
-    E = (E + E2)/2
-    H = (H + H2)/2
-
-    #test
-    fluxes = (R_sw_arr[:-1]*(1-alpha_sw) + R_lw_arr[:-1]*(1-alpha_lw) - R_lw_out_arr[:-1] + E[:-1] + H[:-1])
 
 
-    return fluxes
 
-def calculate_energy_fluxes_manylakes(phys, surf_temps, combine_days):
-    fluxes = torch.empty_like(phys[:-combine_days-1,0])
-
-    time = 86400 #seconds per day
-    surface_area = 39865825 
-
-    e_s = 0.985 #emissivity of water, given by Jordan
-    alpha_sw = 0.07 #shortwave albedo, given by Jordan Read
-    alpha_lw = 0.03 #longwave, albeda, given by Jordan Read
-    sigma = 5.67e-8 #Stefan-Baltzmann constant
-    R_sw_arr = phys[:-1,1] + (phys[1:,1]-phys[:-1,1])/2
-    R_lw_arr = phys[:-1,2] + (phys[1:,2]-phys[:-1,2])/2
-    R_lw_out_arr = e_s*sigma*(torch.pow(surf_temps[:]+273.15, 4))
-    R_lw_out_arr = R_lw_out_arr[:-1] + (R_lw_out_arr[1:]-R_lw_out_arr[:-1])/2
-
-    air_temp = phys[:-1,3] 
-    air_temp2 = phys[1:,3]
-    rel_hum = phys[:-1,4]
-    rel_hum2 = phys[1:,4]
-    ws = phys[:-1, 5]
-    ws2 = phys[1:,5]
-    t_s = surf_temps[:-1]
-    t_s2 = surf_temps[1:]
-    E = phys_operations.calculate_heat_flux_latent(t_s, air_temp, rel_hum, ws)
-    H = phys_operations.calculate_heat_flux_sensible(t_s, air_temp, rel_hum, ws)
-    E2 = phys_operations.calculate_heat_flux_latent(t_s2, air_temp2, rel_hum2, ws2)
-    H2 = phys_operations.calculate_heat_flux_sensible(t_s2, air_temp2, rel_hum2, ws2)
-    E = (E + E2)/2
-    H = (H + H2)/2
-
-    #test
-    fluxes = (R_sw_arr[:-1]*(1-alpha_sw) + R_lw_arr[:-1]*(1-alpha_lw) - R_lw_out_arr[:-1] + E[:-1] + H[:-1])
-
-
-    return fluxes
 
 def getHypsographyManyLakes(path, lakename, depths):
     my_path = os.path.abspath(os.path.dirname(__file__))
