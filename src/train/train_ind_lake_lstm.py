@@ -359,7 +359,6 @@ if pretrain:
                 inputs = data[:,:,:-1].float()
                 targets = data[:,:,-1].float()
                 tmp_dates = tst_dates[:, :]
-                depths = inputs[:,:,n_static_feats]
 
                 if use_gpu:
                     inputs = inputs.cuda()
@@ -378,7 +377,6 @@ if pretrain:
                 if use_gpu:
                     targets = targets.cuda()
                 inputs = inputs[:, begin_loss_ind:, :]
-                depths = depths[:, begin_loss_ind:]
                 mse = mse_criterion(pred[loss_indices], targets[loss_indices])
                 #calculate error
                 avg_mse += mse
