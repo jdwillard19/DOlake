@@ -94,14 +94,14 @@ tst_norm_data_path = "../../data/processed/"+site_id+"/tst_norm.npy"
 tst_dates_path = "../../data/processed/"+site_id+"/tst_dates.npy"
 
 #data
-pt_data_raw = np.load(pt_data_path)
-pt_data = np.load(pt_norm_data_path)
+pt_data_raw = np.load(pt_data_path,allow_pickle=True)
+pt_data = np.load(pt_norm_data_path,allow_pickle=True)
 pt_dates = np.load(pt_dates_path,allow_pickle=True)
-trn_data_raw = np.load(trn_data_path)
-trn_data = np.load(trn_norm_data_path)
+trn_data_raw = np.load(trn_data_path,allow_pickle=True)
+trn_data = np.load(trn_norm_data_path,allow_pickle=True)
 trn_dates = np.load(trn_dates_path, allow_pickle=True)
-tst_data_raw = np.load(tst_data_path)
-tst_data = np.load(tst_norm_data_path)
+tst_data_raw = np.load(tst_data_path,allow_pickle=True)
+tst_data = np.load(tst_norm_data_path,allow_pickle=True)
 tst_dates = np.load(tst_dates_path, allow_pickle=True)
 
 ###############################
