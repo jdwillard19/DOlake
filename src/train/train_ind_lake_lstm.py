@@ -65,7 +65,7 @@ patience = 100
 
 n_hidden = 128 #fixed
 train_epochs = 10000
-pretrain_epochs = 10000
+pretrain_epochs = 70
 
 unsup_loss_cutoff = 40
 dc_unsup_loss_cutoff = 1e-3
@@ -247,9 +247,6 @@ epoch_since_best = 0
 manualSeed = [random.randint(1, 99999999) for i in range(pretrain_epochs)]
 
 #convergence variables
-eps_converged = 0
-eps_till_converge = 10
-converged = False
 
 min_tst_rmse = 999
 min_tst_epoch = -1
@@ -392,7 +389,6 @@ if pretrain:
 
 print("pretraining finished in " + str(epoch) +" epochs")
 saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
-sys.exit()
      
 
 
@@ -413,7 +409,7 @@ data_dir = "../../data/processed/"+lakename+"/"
 #paths to save
 
 pretrain_path = "../../models/"+lakename+"/pretrain_source_model"
-save_path = "../../models/"+lakename+"/PGRNN_source_model_0.7"
+save_path = "../../models/"+lakename+"/finetune_source_model_0.7"
 
 
 ###############################
@@ -463,17 +459,12 @@ class TotalModelOutputDataset(Dataset):
 
 
 #format training data for loading
-train_data = TemperatureTrainDataset(trn_norm)
+train_data = TemperatureTrainDataset(trn_data)
 
 #get depth area percent data
-depth_areas = torch.from_numpy(hypsography).float().flatten()
-if use_gpu:
-    depth_areas = depth_areas.cuda()
 
 #format total y-hat data for loading
-total_data = TotalModelOutputDataset(all_data, all_phys_data, all_dates)
 n_batches = math.floor(trn_data.size()[0] / batch_size)
-yhat_batch_size = n_depths
 
 #batch samplers used to draw samples in dataloaders
 batch_sampler = pytorch_data_operations.ContiguousBatchSampler(batch_size, n_batches)
@@ -553,7 +544,7 @@ if use_gpu:
 
 #define loss and optimizer
 mse_criterion = nn.MSELoss()
-optimizer = optim.Adam(lstm_net.parameters(), lr=.005)#, weight_decay=0.01)
+optimizer = optim.AdamW(lstm_net.parameters())#, weight_decay=0.01)
 
 #training loop
 
@@ -567,15 +558,17 @@ manualSeed = [random.randint(1, 99999999) for i in range(train_epochs)]
 
 
 
+convergence variables
 
-# #convergence variables
-eps_converged = 0
-eps_till_converge = 10
-converged = False
-
+min_tst_rmse = 999
+min_tst_epoch = -1
+#############################################################
+#pre- training loop
+####################################################################
 for epoch in range(train_epochs):
     if verbose:
         print("train epoch: ", epoch)
+    torch.manual_seed(manualSeed[epoch])
     if use_gpu:
         torch.cuda.manual_seed_all(manualSeed[epoch])
     running_loss = 0.0
@@ -583,37 +576,29 @@ for epoch in range(train_epochs):
     #reload loader for shuffle
     #batch samplers used to draw samples in dataloaders
     batch_sampler = pytorch_data_operations.ContiguousBatchSampler(batch_size, n_batches)
-    batch_sampler_all = pytorch_data_operations.RandomContiguousBatchSampler(all_data.size()[0], seq_length, yhat_batch_size, n_batches)
-
-    alldataloader = DataLoader(total_data, batch_sampler=batch_sampler_all, pin_memory=True)
-    trainloader = DataLoader(train_data, batch_sampler=batch_sampler, pin_memory=True)
-    multi_loader = pytorch_data_operations.MultiLoader([trainloader, alldataloader])
+    trainloader = DataLoader(trn_data, batch_sampler=batch_sampler, pin_memory=True)
 
 
     #zero the parameter gradients
     optimizer.zero_grad()
-    lstm_net.train(True)
     avg_loss = 0
-    avg_unsup_loss = 0
-    avg_dc_unsup_loss = 0
+    # avg_unsup_loss = 0
+    # avg_dc_unsup_loss = 0
+
     batches_done = 0
-    for i, batches in enumerate(multi_loader):
-        #load data
-        inputs = None
-        targets = None
-        depths = None
-        unsup_inputs = None
-        unsup_phys_data = None
-        unsup_depths = None
-        unsup_dates = None
-        unsup_labels = None
-        for j, b in enumerate(batches):
-            if j == 0:
-                inputs, targets = b
-
-            if j == 1:
-                unsup_inputs, unsup_phys_data, unsup_dates, unsup_labels = b
-
+    # for i, batches in enumerate(multi_loader):
+    #     #load data
+    #     inputs = None
+    #     targets = None
+    #     depths = None
+    #     unsup_inputs = None
+    #     unsup_phys_data = None
+    #     unsup_depths = None
+    #     unsup_dates = None
+#     unsup_labels = None
+    for m, data in enumerate(trainloader, 0):
+        inputs = data[0].float()
+        targets = data[1].float()
         #cuda commands
         if(use_gpu):
             inputs = inputs.cuda()
@@ -622,64 +607,31 @@ for epoch in range(train_epochs):
         #forward  prop
         lstm_net.hidden = lstm_net.init_hidden(batch_size=inputs.size()[0])
         h_state = None
+        inputs = inputs.float()
         outputs, h_state = lstm_net(inputs, h_state)
         outputs = outputs.view(outputs.size()[0],-1)
 
-        #unsupervised output
-        h_state = None
-        lstm_net.hidden = lstm_net.init_hidden(batch_size = yhat_batch_size)
-        unsup_loss = torch.tensor(0).float()
+        loss_outputs = outputs[:,begin_loss_ind:]
+        loss_targets = targets[:,begin_loss_ind:]
+
         if use_gpu:
-            unsup_inputs = unsup_inputs.cuda()
-            unsup_phys_data = unsup_phys_data.cuda()
-            unsup_labels = unsup_labels.cuda()
-            depth_areas = depth_areas.cuda()
-            unsup_dates = unsup_dates.cuda()
-            unsup_loss = unsup_loss.cuda()
-        
-        #get unsupervised outputs
-        unsup_outputs, h_state = lstm_net(unsup_inputs, h_state)
+            loss_outputs = loss_outputs.cuda()
+            loss_targets = loss_targets.cuda()
 
 
-        #calculate unsupervised loss
-        if ec_lambda > 0:
-            unsup_loss = calculate_ec_loss_manylakes(unsup_inputs[:,begin_loss_ind:,:],
-                                       unsup_outputs[:,begin_loss_ind:,:],
-                                       unsup_phys_data[:,begin_loss_ind:,:],
-                                       unsup_labels[:,begin_loss_ind:],
-                                       unsup_dates[:,begin_loss_ind:],                                        
-                                       depth_areas,
-                                       n_depths,
-                                       ec_threshold,
-                                       use_gpu, 
-                                       combine_days=1)
-        dc_unsup_loss = torch.tensor(0).float()
-        if use_gpu:
-            dc_unsup_loss = dc_unsup_loss.cuda()
-
-        if dc_lambda > 0:
-            dc_unsup_loss = calculate_dc_loss(unsup_outputs, n_depths, use_gpu)
-    
 
         #calculate losses
         reg1_loss = 0
         if lambda1 > 0:
             reg1_loss = calculate_l1_loss(lstm_net)
 
-
-        loss_outputs = outputs[:,begin_loss_ind:]
-        loss_targets = targets[:,begin_loss_ind:].cpu()
+        loss = mse_criterion(loss_outputs, loss_targets) + lambda1*reg1_loss
 
 
-        #get indices to calculate loss
-        loss_indices = np.array(np.isfinite(loss_targets.cpu()), dtype='bool_')
+        avg_loss += loss
 
-        if use_gpu:
-            loss_outputs = loss_outputs.cuda()
-            loss_targets = loss_targets.cuda()
-        loss = mse_criterion(loss_outputs[loss_indices], loss_targets[loss_indices]) + lambda1*reg1_loss + ec_lambda*unsup_loss + dc_lambda*dc_unsup_loss
-        #backward
-
+        batches_done += 1
+        #backward prop
         loss.backward(retain_graph=False)
         if grad_clip > 0:
             clip_grad_norm_(lstm_net.parameters(), grad_clip, norm_type=2)
@@ -689,41 +641,63 @@ for epoch in range(train_epochs):
 
         #zero the parameter gradients
         optimizer.zero_grad()
-        avg_loss += loss
-        avg_unsup_loss += unsup_loss
-        avg_dc_unsup_loss += dc_unsup_loss
-        batches_done += 1
 
-    #check for convergence
+        #print statistics
+        # running_loss += loss.item()
+        # if verbose:
+        #     if i % 3 == 2:
+        #         print('[%d, %5d] loss: %.3f' %
+        #              (epoch + 1, i + 1, running_loss / 3))
+        #         running_loss = 0.0
     avg_loss = avg_loss / batches_done
-    avg_unsup_loss = avg_unsup_loss / batches_done
-    avg_dc_unsup_loss = avg_dc_unsup_loss / batches_done
+
     if verbose:
-        print("dc loss=",avg_dc_unsup_loss)
-        print("energy loss=",avg_unsup_loss)
         print("rmse loss=", avg_loss)
 
-    if avg_loss < 1:
-        if verbose:
-            print("training converged")
-        converged = True
-    if avg_unsup_loss < unsup_loss_cutoff:
-        eps_converged += 1
-        if verbose:
-            print("energy converged",eps_converged)
-        else:
-            throwaway = 0
-    else:
-        eps_converged = 0
+    testloader = torch.utils.data.DataLoader(tst_data, batch_size=tst_data.size()[0], shuffle=False, pin_memory=True)
 
-    if not avg_dc_unsup_loss < dc_unsup_loss_cutoff2:
-        converged = False
-    else:
-        if verbose:
-            print("depth consistency converged")
-    if converged and eps_converged >= 10:
-        saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
-        print("training finished in ", epoch)
-        break
-print("TRAINING COMPLETE")
+    with torch.no_grad():
+        avg_mse = 0
+        ct = 0
+        for m, data in enumerate(testloader, 0):
+            #now for mendota data
+            #this loop is dated, there is now only one item in testloader
+
+            #parse data into inputs and targets
+            inputs = data[:,:,:-1].float()
+            targets = data[:,:,-1].float()
+            tmp_dates = tst_dates[:, :]
+
+            if use_gpu:
+                inputs = inputs.cuda()
+                targets = targets.cuda()
+
+            #run model
+            h_state = None
+            lstm_net.hidden = lstm_net.init_hidden(batch_size=inputs.size()[0])
+            pred, h_state = lstm_net(inputs, h_state)
+            pred = pred.view(pred.size()[0],-1)
+            pred = pred[:, begin_loss_ind:]
+
+            #calculate error
+            targets = targets.cpu()
+            loss_indices = torch.from_numpy(np.array(np.isfinite(targets.cpu()), dtype='bool_'))
+            if use_gpu:
+                targets = targets.cuda()
+            inputs = inputs[:, begin_loss_ind:, :]
+            mse = mse_criterion(pred[loss_indices], targets[loss_indices])
+            #calculate error
+            avg_mse += mse
+            ct += 1
+            # if mse > 0: #obsolete i think
+            #     ct += 1
+        avg_mse = avg_mse / ct
+
+        if avg_mse < min_tst_rmse:
+            min_tst_rmse = avg_mse
+            min_tst_epoch = epoch
+        print("test rmse: ", avg_mse, " (lowest rmse at epoch ",min_tst_epoch,": ",min_tst_rmse,")")
+
+print("training finished in " + str(epoch) +" epochs")
 saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
+sys.exit()
