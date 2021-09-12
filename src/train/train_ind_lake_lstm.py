@@ -306,9 +306,6 @@ if pretrain:
             loss_outputs = outputs[:,begin_loss_ind:]
             loss_targets = targets[:,begin_loss_ind:]
 
-            #unsupervised output
-            h_state = None
-            lstm_net.hidden = lstm_net.init_hidden(batch_size = yhat_batch_size)
             if use_gpu:
                 loss_outputs = loss_outputs.cuda()
                 loss_targets = loss_targets.cuda()
