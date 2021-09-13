@@ -60,7 +60,7 @@ rmse_threshold = .7 #TBD
 #params
 ###########################33
 first_save_epoch = 0
-patience = 100
+patience = 300
 
 n_hidden = 128 #fixed
 train_epochs = 10000
@@ -764,4 +764,4 @@ with torch.no_grad():
     if avg_mse < min_tst_rmse:
         min_tst_rmse = avg_mse
         min_tst_epoch = epoch
-    print("test rmse: ", np.sqrt(avg_mse))
+    print("test rmse: ", np.sqrt(avg_mse.cpu().numpy()))
