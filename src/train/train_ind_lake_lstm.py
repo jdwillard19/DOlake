@@ -66,9 +66,6 @@ n_hidden = 28 #fixed
 train_epochs = 10000
 pretrain_epochs = 300
 
-unsup_loss_cutoff = 40
-dc_unsup_loss_cutoff = 1e-3
-dc_unsup_loss_cutoff2 = 1e-2
 #ow
 seq_length = 60 #how long of sequences to use in model
 begin_loss_ind = 0#index in sequence where we begin to calculate error or predict
@@ -105,11 +102,11 @@ tst_dates = np.load(tst_dates_path, allow_pickle=True)
 
 if trn_data.shape[0] < 2:
     print("not enough for validation set")
-    pdb.set_trace()
+    train_epochs = 1
 
-last_trn_ind = int(np.round((trn_data.shape[0]*2)/3))
-val_data = trn_data[last_trn_ind:,:,:]
-trn_data = trn_data[:last_trn_ind,:,:]
+last_trn_ind = int(np.round((trn_data.shape[0])/3))
+val_data = trn_data[:last_trn_ind:,:,:]
+trn_data = trn_data[last_trn_ind:,:,:]
 print("trian size",trn_data.size())
 ###############################
 # data preprocess
@@ -716,6 +713,8 @@ for epoch in range(train_epochs):
                 break
         print("val rmse: ", avg_mse, " (lowest val rmse at epoch ",min_tst_epoch,": ",min_tst_rmse,")")
 
+if train_epochs == 1:
+    saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
 
 
 print("training finished in " + str(epoch) +" epochs")
@@ -782,4 +781,3 @@ with torch.no_grad():
             # if mse > 0: #obsolete i think
         #     ct += 1
         print("rmse: ",np.sqrt(((df['lstm_pred'].values - df['actual'].values)**2).mean()))
-        pdb.set_trace()
