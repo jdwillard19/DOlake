@@ -772,9 +772,8 @@ with torch.no_grad():
         df = pd.DataFrame()
         df['pred'] = loss_pred
         df['actual'] = loss_targets
-        pdb.set_trace()
         df['date'] = loss_dates
-        df['site_id'] = 'nhdhr_'+target_id
+        df['site_id'] = 'nhdhr_'+site_id
         df = df.drop_duplicates(
           subset = ['date', 'depth'],
           keep = 'last').reset_index(drop = True)
