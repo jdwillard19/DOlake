@@ -30,9 +30,9 @@ for ct, site_id in enumerate(site_ids):
     process_rmses.append(site_rmse)
 
     lstm_df = pd.read_feather("../../results/singleSiteLSTM_"+site_id+".feather")
-    lstm_df['date_ts'] = [pd.Timestamp(x) for x in lstm_df['date'].values]
+    lstm_df['date_ts'] = pd.to_datetime(lstm_df['date'], utc = True) 
     pdb.set_trace()
-    
+
     site_df_test.merge(lstm_df, left_on='date', right_on='date2')
 
 
