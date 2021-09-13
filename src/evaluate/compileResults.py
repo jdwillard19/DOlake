@@ -14,7 +14,8 @@ site_ids = site_ids[~np.isin(site_ids,sites_without_data2)]
 def rmse(pred,targ):
     return np.sqrt(((pred - targ)**2).mean())
 
-df = pd.DataFrame()
+all_obs_df = pd.DataFrame()
+per_site_df = pd.DataFrame()
 for ct, site_id in enumerate(site_ids):
     print(ct,"/",len(site_ids), " sites: ",site_id)
     site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
@@ -22,18 +23,25 @@ for ct, site_id in enumerate(site_ids):
     #filter to test obs
     site_df_test = site_df[(site_df['splitsample']==1) & (pd.notnull(site_df['obs_hyp']))]
 
-    site_rmse = rmse(site_df_test['obs_hyp'], site_df_test['o2_hyp'])
+    site_rmse_process = rmse(site_df_test['obs_hyp'], site_df_test['o2_hyp'])
 
-    if np.isnan(site_rmse):
+    if np.isnan(site_rmse_process):
         print("nan?")
         pdb.set_trace()
-    process_rmses.append(site_rmse)
+    process_rmses.append(site_rmse_process)
 
     lstm_df = pd.read_feather("../../results/singleSiteLSTM_"+site_id+".feather")
     lstm_df['date_ts'] = pd.to_datetime(lstm_df['date'], utc = True) 
-    pdb.set_trace()
 
-    site_df_test.merge(lstm_df, left_on='date', right_on='date2')
+    site_df_test = site_df_test.merge(lstm_df, left_on='date', right_on='date_ts')
+    df = pd.concat([site_df_test,df],ignore_index=True)
+
+    #rmse df
+    site_rmse_lstm = rmse(site_df_test['lstm_pred'],site_df_test['obs_hyp'])
+    site_rmse_df = pd.DataFrame()
+    site_rmse_df['site_id'] = [site_id]
+    site_rmse_df['o2_model_rmse'] = [site_rmse_process]
+    site_rmse_df['lstm_model_rmse'] = [site_rmse_lstm]
 
 
 pdb.set_trace()
