@@ -62,9 +62,9 @@ rmse_threshold = .7 #TBD
 first_save_epoch = 0
 patience = 300
 
-n_hidden = 28 #fixed
+n_hidden = 128 #fixed
 train_epochs = 10000
-pretrain_epochs = 300
+pretrain_epochs = 70
 
 #ow
 seq_length = 60 #how long of sequences to use in model
@@ -717,7 +717,7 @@ for epoch in range(train_epochs):
 if train_epochs == 1:
     saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
     print("model saved")
-    
+
 
 
 print("training finished in " + str(epoch) +" epochs")
