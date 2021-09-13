@@ -45,5 +45,7 @@ for ct, site_id in enumerate(site_ids):
     per_site_df = pd.concat([site_rmse_df,per_site_df],ignore_index=True)
 
 
+all_obs_df.to_csv("../../results/all_observations_results.csv")
+per_site_df.to_csv("../../results/per_site_results.csv")
 
-pdb.set_trace()
+
