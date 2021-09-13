@@ -705,6 +705,7 @@ for epoch in range(train_epochs):
             min_tst_rmse = avg_mse
             min_tst_epoch = epoch
             saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
+            print("model saved")
             epoch_since_best = 0
         else:
             epoch_since_best += 1
@@ -715,6 +716,8 @@ for epoch in range(train_epochs):
 
 if train_epochs == 1:
     saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
+    print("model saved")
+    
 
 
 print("training finished in " + str(epoch) +" epochs")
