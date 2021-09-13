@@ -103,6 +103,12 @@ tst_data_raw = torch.from_numpy(np.array(np.load(tst_data_path,allow_pickle=True
 tst_data = torch.from_numpy(np.array(np.load(tst_norm_data_path,allow_pickle=True),dtype=np.float32))
 tst_dates = np.load(tst_dates_path, allow_pickle=True)
 
+if trn_data.shape[0] < 2:
+    print("not enough for validation set")
+    pdb.set_trace()
+
+last_trn_ind = int(np.round((trn_data.shape[0]*2)/3))
+val_data = trn_data[last_trn_ind:,:,:]
 print("trian size",trn_data.size())
 ###############################
 # data preprocess
@@ -344,49 +350,51 @@ if pretrain:
         if verbose:
             print("rmse loss=", avg_loss)
 
-        testloader = torch.utils.data.DataLoader(tst_data, batch_size=tst_data.size()[0], shuffle=False, pin_memory=True)
 
-        with torch.no_grad():
-            avg_mse = 0
-            ct = 0
-            for m, data in enumerate(testloader, 0):
-                #now for mendota data
-                #this loop is dated, there is now only one item in testloader
 
-                #parse data into inputs and targets
-                inputs = data[:,:,:-1].float()
-                targets = data[:,:,-1].float()
-                tmp_dates = tst_dates[:, :]
+        # testloader = torch.utils.data.DataLoader(tst_data, batch_size=tst_data.size()[0], shuffle=False, pin_memory=True)
 
-                if use_gpu:
-                    inputs = inputs.cuda()
-                    targets = targets.cuda()
+        # with torch.no_grad():
+        #     avg_mse = 0
+        #     ct = 0
+        #     for m, data in enumerate(testloader, 0):
+        #         #now for mendota data
+        #         #this loop is dated, there is now only one item in testloader
 
-                #run model
-                h_state = None
-                lstm_net.hidden = lstm_net.init_hidden(batch_size=inputs.size()[0])
-                pred, h_state = lstm_net(inputs, h_state)
-                pred = pred.view(pred.size()[0],-1)
-                pred = pred[:, begin_loss_ind:]
+        #         #parse data into inputs and targets
+        #         inputs = data[:,:,:-1].float()
+        #         targets = data[:,:,-1].float()
+        #         tmp_dates = tst_dates[:, :]
 
-                #calculate error
-                targets = targets.cpu()
-                loss_indices = torch.from_numpy(np.array(np.isfinite(targets.cpu()), dtype='bool_'))
-                if use_gpu:
-                    targets = targets.cuda()
-                inputs = inputs[:, begin_loss_ind:, :]
-                mse = mse_criterion(pred[loss_indices], targets[loss_indices])
-                #calculate error
-                avg_mse += mse
-                ct += 1
-                # if mse > 0: #obsolete i think
-                #     ct += 1
-            avg_mse = avg_mse / ct
+        #         if use_gpu:
+        #             inputs = inputs.cuda()
+        #             targets = targets.cuda()
 
-            if avg_mse < min_tst_rmse:
-                min_tst_rmse = avg_mse
-                min_tst_epoch = epoch
-            print("test rmse: ", avg_mse, " (lowest rmse at epoch ",min_tst_epoch,": ",min_tst_rmse,")")
+        #         #run model
+        #         h_state = None
+        #         lstm_net.hidden = lstm_net.init_hidden(batch_size=inputs.size()[0])
+        #         pred, h_state = lstm_net(inputs, h_state)
+        #         pred = pred.view(pred.size()[0],-1)
+        #         pred = pred[:, begin_loss_ind:]
+
+        #         #calculate error
+        #         targets = targets.cpu()
+        #         loss_indices = torch.from_numpy(np.array(np.isfinite(targets.cpu()), dtype='bool_'))
+        #         if use_gpu:
+        #             targets = targets.cuda()
+        #         inputs = inputs[:, begin_loss_ind:, :]
+        #         mse = mse_criterion(pred[loss_indices], targets[loss_indices])
+        #         #calculate error
+        #         avg_mse += mse
+        #         ct += 1
+        #         # if mse > 0: #obsolete i think
+        #         #     ct += 1
+        #     avg_mse = avg_mse / ct
+
+        #     if avg_mse < min_tst_rmse:
+        #         min_tst_rmse = avg_mse
+        #         min_tst_epoch = epoch
+        #     print("test rmse: ", avg_mse, " (lowest rmse at epoch ",min_tst_epoch,": ",min_tst_rmse,")")
 
 print("pretraining finished in " + str(epoch) +" epochs")
 saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
@@ -404,7 +412,7 @@ saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
 #params
 ###########################
 patience = 1000
-lambda1 = 0
+lambda1 = 0.0001
 data_dir = "../../data/processed/"+lakename+"/"
 
 #paths to save
@@ -656,12 +664,12 @@ for epoch in range(train_epochs):
     if verbose:
         print("rmse loss=", avg_loss)
 
-    testloader = torch.utils.data.DataLoader(tst_data, batch_size=tst_data.size()[0], shuffle=False, pin_memory=True)
+    valloader = torch.utils.data.DataLoader(val_data, batch_size=tst_data.size()[0], shuffle=False, pin_memory=True)
 
     with torch.no_grad():
         avg_mse = 0
         ct = 0
-        for m, data in enumerate(testloader, 0):
+        for m, data in enumerate(valloader, 0):
             #now for mendota data
             #this loop is dated, there is now only one item in testloader
 
@@ -698,8 +706,61 @@ for epoch in range(train_epochs):
         if avg_mse < min_tst_rmse:
             min_tst_rmse = avg_mse
             min_tst_epoch = epoch
-        print("test rmse: ", avg_mse, " (lowest rmse at epoch ",min_tst_epoch,": ",min_tst_rmse,")")
+            saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
+        else:
+            epoch_since_best += 1
+            if epoch_since_best > patience:
+                print("patience met")
+                break
+        print("val rmse: ", avg_mse, " (lowest val rmse at epoch ",min_tst_epoch,": ",min_tst_rmse,")")
+
+
 
 print("training finished in " + str(epoch) +" epochs")
-saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
-sys.exit()
+# saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
+
+
+#test model
+testloader = torch.utils.data.DataLoader(tst_data, batch_size=tst_data.size()[0], shuffle=False, pin_memory=True)
+
+with torch.no_grad():
+    avg_mse = 0
+    ct = 0
+    for m, data in enumerate(testloader, 0):
+        #now for mendota data
+        #this loop is dated, there is now only one item in testloader
+
+        #parse data into inputs and targets
+        inputs = data[:,:,:-1].float()
+        targets = data[:,:,-1].float()
+        tmp_dates = tst_dates[:, :]
+
+        if use_gpu:
+            inputs = inputs.cuda()
+            targets = targets.cuda()
+
+        #run model
+        h_state = None
+        lstm_net.hidden = lstm_net.init_hidden(batch_size=inputs.size()[0])
+        pred, h_state = lstm_net(inputs, h_state)
+        pred = pred.view(pred.size()[0],-1)
+        pred = pred[:, begin_loss_ind:]
+
+        #calculate error
+        targets = targets.cpu()
+        loss_indices = torch.from_numpy(np.array(np.isfinite(targets.cpu()), dtype='bool_'))
+        if use_gpu:
+            targets = targets.cuda()
+        inputs = inputs[:, begin_loss_ind:, :]
+        mse = mse_criterion(pred[loss_indices], targets[loss_indices])
+        #calculate error
+        avg_mse += mse
+        ct += 1
+        # if mse > 0: #obsolete i think
+        #     ct += 1
+    avg_mse = avg_mse / ct
+
+    if avg_mse < min_tst_rmse:
+        min_tst_rmse = avg_mse
+        min_tst_epoch = epoch
+    print("test rmse: ", np.sqrt(avg_mse))
