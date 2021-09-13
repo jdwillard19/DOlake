@@ -775,7 +775,7 @@ with torch.no_grad():
         df['date'] = loss_dates
         df['site_id'] = 'nhdhr_'+site_id
         df = df.drop_duplicates(
-          subset = ['date', 'depth'],
+          subset = ['date'],
           keep = 'last').reset_index(drop = True)
         pdb.set_trace()
             # if mse > 0: #obsolete i think
