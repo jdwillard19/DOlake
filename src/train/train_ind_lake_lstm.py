@@ -772,6 +772,7 @@ with torch.no_grad():
         df = pd.DataFrame()
         df['pred'] = loss_pred
         df['actual'] = loss_targets
+        pdb.set_trace()
         df['date'] = loss_dates
         df['depth'] = loss_depths
         df['site_id'] = 'nhdhr_'+target_id
