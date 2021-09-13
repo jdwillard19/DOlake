@@ -770,13 +770,13 @@ with torch.no_grad():
         loss_targets = targets[np.isfinite(targets)]
         loss_dates = tst_dates[np.isfinite(targets)]
         df = pd.DataFrame()
-        df['pred'] = loss_pred
+        df['lstm_pred'] = loss_pred
         df['actual'] = loss_targets
         df['date'] = loss_dates
-        df['site_id'] = 'nhdhr_'+site_id
+        df['site_id'] = site_id
         df = df.drop_duplicates(
           subset = ['date'],
           keep = 'last').reset_index(drop = True)
-        pdb.set_trace()
+        df.to_feather("../../results/singleSiteLSTM_"+site_id+".feather")
             # if mse > 0: #obsolete i think
         #     ct += 1
