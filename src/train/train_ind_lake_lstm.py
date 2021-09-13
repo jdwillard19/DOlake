@@ -62,7 +62,7 @@ rmse_threshold = .7 #TBD
 first_save_epoch = 0
 patience = 300
 
-n_hidden = 20 #fixed
+n_hidden = 28 #fixed
 train_epochs = 10000
 pretrain_epochs = 300
 
