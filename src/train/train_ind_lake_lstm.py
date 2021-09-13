@@ -108,7 +108,6 @@ last_trn_ind = int(np.round((trn_data.shape[0])/3))
 val_data = trn_data[:last_trn_ind:,:,:]
 trn_data = trn_data[last_trn_ind:,:,:]
 print("train size",trn_data.size())
-pdb.set_trace()
 ###############################
 # data preprocess
 ##################################
