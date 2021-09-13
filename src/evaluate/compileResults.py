@@ -34,7 +34,7 @@ for ct, site_id in enumerate(site_ids):
     lstm_df['date_ts'] = pd.to_datetime(lstm_df['date'], utc = True) 
 
     site_df_test = site_df_test.merge(lstm_df, left_on='date', right_on='date_ts')
-    df = pd.concat([site_df_test,df],ignore_index=True)
+    all_obs_df = pd.concat([site_df_test,all_obs_df],ignore_index=True)
 
     #rmse df
     site_rmse_lstm = rmse(site_df_test['lstm_pred'],site_df_test['obs_hyp'])
