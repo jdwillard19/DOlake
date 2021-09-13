@@ -721,6 +721,17 @@ print("training finished in " + str(epoch) +" epochs")
 # saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
 
 
+#load model 
+load_path = save_path
+n_hidden = torch.load(load_path)['state_dict']['lstm.weight_hh'].shape[0]
+if use_gpu:
+    lstm_net = lstm_net.cuda(0)
+pretrain_dict = torch.load(load_path)['state_dict']
+model_dict = lstm_net.state_dict()
+pretrain_dict = {key: v for key, v in pretrain_dict.items() if key in model_dict}
+model_dict.update(pretrain_dict)
+lstm_net.load_state_dict(pretrain_dict)
+
 #test model
 testloader = torch.utils.data.DataLoader(tst_data, batch_size=tst_data.size()[0], shuffle=False, pin_memory=True)
 
