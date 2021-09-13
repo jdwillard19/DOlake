@@ -757,11 +757,25 @@ with torch.no_grad():
         #calculate error
         avg_mse += mse
         ct += 1
-        # if mse > 0: #obsolete i think
-        #     ct += 1
-    avg_mse = avg_mse / ct
 
-    if avg_mse < min_tst_rmse:
-        min_tst_rmse = avg_mse
-        min_tst_epoch = epoch
-    print("test rmse: ", np.sqrt(avg_mse.cpu().numpy()))
+        raw_data_dir = '../../data/raw/DOzip/'
+        site_id = lakename
+        site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
+
+        #filter to test obs
+        site_df_test = site_df[(site_df['splitsample']==1) & (pd.notnull(site_df['obs_hyp']))]
+        loss_pred = pred[np.isfinite(targets)]
+        loss_targets = targets[np.isfinite(targets)]
+        loss_dates = tst_dates[np.isfinite(targets)]
+        df = pd.DataFrame()
+        df['pred'] = loss_pred
+        df['actual'] = loss_targets
+        df['date'] = loss_dates
+        df['depth'] = loss_depths
+        df['site_id'] = 'nhdhr_'+target_id
+        df = df.drop_duplicates(
+          subset = ['date', 'depth'],
+          keep = 'last').reset_index(drop = True)
+        pdb.set_trace()
+            # if mse > 0: #obsolete i think
+        #     ct += 1
