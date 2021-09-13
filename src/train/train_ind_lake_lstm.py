@@ -109,6 +109,7 @@ if trn_data.shape[0] < 2:
 
 last_trn_ind = int(np.round((trn_data.shape[0]*2)/3))
 val_data = trn_data[last_trn_ind:,:,:]
+trn_data = trn_data[:last_trn_ind,:,:]
 print("trian size",trn_data.size())
 ###############################
 # data preprocess
