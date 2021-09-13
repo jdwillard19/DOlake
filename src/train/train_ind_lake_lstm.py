@@ -780,4 +780,5 @@ with torch.no_grad():
         df.to_feather("../../results/singleSiteLSTM_"+site_id+".feather")
             # if mse > 0: #obsolete i think
         #     ct += 1
+        print("rmse: ",np.sqrt(((df['lstm_pred'].values - df['actual'].values)**2).mean()))
         pdb.set_trace()
