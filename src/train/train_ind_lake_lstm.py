@@ -700,20 +700,21 @@ for epoch in range(train_epochs):
             ct += 1
             # if mse > 0: #obsolete i think
             #     ct += 1
-        avg_mse = avg_mse / ct
+        if ct is not 0:
+            avg_mse = avg_mse / ct
 
-        if avg_mse < min_tst_rmse:
-            min_tst_rmse = avg_mse
-            min_tst_epoch = epoch
-            saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
-            print("model saved")
-            epoch_since_best = 0
-        else:
-            epoch_since_best += 1
-            if epoch_since_best > patience:
-                print("patience met")
-                break
-        print("val rmse: ", avg_mse, " (lowest val rmse at epoch ",min_tst_epoch,": ",min_tst_rmse,")")
+            if avg_mse < min_tst_rmse:
+                min_tst_rmse = avg_mse
+                min_tst_epoch = epoch
+                saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
+                print("model saved")
+                epoch_since_best = 0
+            else:
+                epoch_since_best += 1
+                if epoch_since_best > patience:
+                    print("patience met")
+                    break
+            print("val rmse: ", avg_mse, " (lowest val rmse at epoch ",min_tst_epoch,": ",min_tst_rmse,")")
 
 if train_epochs == 1:
     saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
