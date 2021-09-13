@@ -724,7 +724,7 @@ print("training finished in " + str(epoch) +" epochs")
 #load model 
 load_path = save_path
 n_hidden = torch.load(load_path)['state_dict']['out.weight'].shape[1]
-lstm_net = LSTM(n_features, n_hidden, batch_size)
+lstm_net = myLSTM_Net(n_features, n_hidden, batch_size)
 if use_gpu:
     lstm_net = lstm_net.cuda(0)
 pretrain_dict = torch.load(load_path)['state_dict']
