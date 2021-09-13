@@ -764,8 +764,8 @@ with torch.no_grad():
 
         #filter to test obs
         site_df_test = site_df[(site_df['splitsample']==1) & (pd.notnull(site_df['obs_hyp']))]
-        targets = targets.cpu()
-        pred = pred.cpu()
+        targets = targets.cpu().numpy()
+        pred = pred.cpu().numpy()
         loss_pred = pred[np.isfinite(targets)]
         loss_targets = targets[np.isfinite(targets)]
         loss_dates = tst_dates[np.isfinite(targets)]
