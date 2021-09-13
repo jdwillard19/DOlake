@@ -121,7 +121,7 @@ print("trian size",trn_data.size())
 batch_size =trn_data.size()[0] #single batch
 # yhat_batch_size = n_depths*1 #for physics based loss, not used right now
 grad_clip = 1.0 #how much to clip the gradient 2-norm in training
-lambda1 = 0.0001 #magnitude hyperparameter of l1 loss
+lambda1 = 0.001 #magnitude hyperparameter of l1 loss
                                                
 #Dataset classes
 class OxygenTrainDataset(Dataset):
@@ -410,7 +410,7 @@ saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
 #params
 ###########################
 patience = 50
-lambda1 = 0.0001
+lambda1 = 0.001
 data_dir = "../../data/processed/"+lakename+"/"
 
 #paths to save
