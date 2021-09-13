@@ -107,7 +107,7 @@ if trn_data.shape[0] < 2:
 last_trn_ind = int(np.round((trn_data.shape[0])/3))
 val_data = trn_data[:last_trn_ind:,:,:]
 trn_data = trn_data[last_trn_ind:,:,:]
-print("trian size",trn_data.size())
+print("train size",trn_data.size())
 ###############################
 # data preprocess
 ##################################
@@ -416,7 +416,7 @@ data_dir = "../../data/processed/"+lakename+"/"
 #paths to save
 
 pretrain_path = "../../models/"+lakename+"/pretrain_source_model"
-save_path = "../../models/"+lakename+"/finetune_source_model_0.7"
+save_path = "../../models/"+lakename+"/finetune_source_model"
 
 
 ###############################
@@ -535,7 +535,6 @@ def calculate_l1_loss(model):
 
 
 lstm_net = myLSTM_Net(n_features, n_hidden, batch_size)
-
 pretrain_dict = torch.load(pretrain_path)['state_dict']
 model_dict = lstm_net.state_dict()
 pretrain_dict = {k: v for k, v in pretrain_dict.items() if k in model_dict}
