@@ -42,6 +42,8 @@ for ct, site_id in enumerate(site_ids):
     site_rmse_df['site_id'] = [site_id]
     site_rmse_df['o2_model_rmse'] = [site_rmse_process]
     site_rmse_df['lstm_model_rmse'] = [site_rmse_lstm]
+    per_site_df = pd.concat([site_rmse_df,per_site_df],ignore_index=True)
+
 
 
 pdb.set_trace()
