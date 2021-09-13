@@ -99,7 +99,7 @@ trn_dates = np.load(trn_dates_path, allow_pickle=True)
 tst_data_raw = torch.from_numpy(np.array(np.load(tst_data_path,allow_pickle=True),dtype=np.float32))
 tst_data = torch.from_numpy(np.array(np.load(tst_norm_data_path,allow_pickle=True),dtype=np.float32))
 tst_dates = np.load(tst_dates_path, allow_pickle=True)
-
+0
 if trn_data.shape[0] < 2:
     print("not enough for validation set")
     train_epochs = 1
@@ -108,6 +108,8 @@ last_trn_ind = int(np.round((trn_data.shape[0])/3))
 val_data = trn_data[:last_trn_ind:,:,:]
 trn_data = trn_data[last_trn_ind:,:,:]
 print("train size",trn_data.size())
+print("val size",val_data.size())
+print("test size",tst_data.size())
 ###############################
 # data preprocess
 ##################################
