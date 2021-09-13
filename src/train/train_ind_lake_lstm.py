@@ -412,7 +412,7 @@ saveModel(lstm_net.state_dict(), optimizer.state_dict(), save_path)
 #####################
 #params
 ###########################
-patience = 1000
+patience = 300
 lambda1 = 0.0001
 data_dir = "../../data/processed/"+lakename+"/"
 
