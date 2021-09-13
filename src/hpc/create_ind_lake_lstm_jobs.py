@@ -25,7 +25,7 @@ for i in site_ids:
     header = "#!/bin/bash -l\n#SBATCH --time=00:30:00\n#SBATCH --ntasks=8\n#SBATCH --mem=20g\n#SBATCH --mail-type=ALL\n#SBATCH --mail-user=willa099@umn.edu\n#SBATCH --gres=gpu:k40:2\n#SBATCH --output=DO_indLSTM_%s.out\n#SBATCH --error=DO_indLSTM_%s.err\n\n#SBATCH -p k40"%(i,i)
     script = "source /home/kumarv/willa099/takeme_DOtrain.sh\n" #cd to directory with training script
     # script2 = "python write_NLDAS_xy_pairs.py %s %s"%(l,l2)
-    script2 = "python trian_ind_lake_lstm.py %s"%(i)
+    script2 = "python train_ind_lake_lstm.py %s"%(i)
     # script2 = "python predict_lakes_EALSTM_COLD_DEBUG.py %s %s"%(l,l2)
     
     # script3 = "python singleModel_customSparse.py %s"%(l)
