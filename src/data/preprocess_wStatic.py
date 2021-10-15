@@ -45,7 +45,7 @@ if not hardcode:
 		for i,site_id in enumerate(site_ids):
 			print("pre: site ",i,"/",len(site_ids))
 			if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
-				site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+"_wStat.feather")
+				site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 				site_df['site_id'] = site_id
 				site_df = pd.merge(land_use[land_use['nhdr_id']==site_id], site_df,left_on='nhdr_id',right_on='site_id')
 				site_df.drop(['nhdr_id'],axis=1,inplace=True)
@@ -53,9 +53,9 @@ if not hardcode:
 			else:
 				print("no file?")
 				continue
-			total_df.to_feather("./temp/all_site_feats.feather")
+			total_df.to_feather("./temp/all_site_feats_wStat.feather")
 	else:
-		total_df = pd.read_feather("./temp/all_site_feats.feather")
+		total_df = pd.read_feather("./temp/all_site_feats_wStat.feather")
 
 	total_feat_df = total_df.drop(['date','datetime','site_id','fentr_hyp'],axis=1)
 	total_feat_df = total_df[all_feats]
