@@ -41,11 +41,11 @@ seq_len = 60
 total_df = pd.DataFrame(columns=all_feats)
 hardcode = False
 if not hardcode:
-	if not os.path.exists("./temp/all_site_feats.feather"):
+	if not os.path.exists("./temp/all_site_feats_wStat.feather"):
 		for i,site_id in enumerate(site_ids):
 			print("pre: site ",i,"/",len(site_ids))
-			if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
-				site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
+			if os.path.exists(raw_data_dir+site_id+"/"+site_id+"_wStat.feather"):
+				site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+"_wStat.feather")
 				site_df['site_id'] = site_id
 				site_df = pd.merge(land_use[land_use['nhdr_id']==site_id], site_df,left_on='nhdr_id',right_on='site_id')
 				site_df.drop(['nhdr_id'],axis=1,inplace=True)
@@ -71,7 +71,7 @@ if not hardcode:
 	np.save("temp/mean_feats",np.array(mean_feats))
 	np.save("temp/std_feats",np.array(std_feats))
 else:
-	total_df = pd.read_feather("./temp/all_site_feats.feather")
+	total_df = pd.read_feather("./temp/all_site_feats_wStat.feather")
 	total_df = total_df.fillna(value=np.nan)
 	total_feat_df = total_df.drop(['date','datetime','site_id'],axis=1)
 
@@ -106,7 +106,7 @@ if not os.path.exists("../../data/processed"):
 for i,site_id in enumerate(site_ids):
 	# site_id = 'nhdhr_120018027'
 	print("processing site ",i,"/",len(site_ids),": ",site_id)
-	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
+	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+"_wStat.feather")
 	feats = site_df[all_feats]
 	dates = site_df['datetime']
 	# site_id = site_df['site_id']
