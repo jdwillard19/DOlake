@@ -44,7 +44,7 @@ if not hardcode:
 	if not os.path.exists("./temp/all_site_feats_wStat.feather"):
 		for i,site_id in enumerate(site_ids):
 			print("pre: site ",i,"/",len(site_ids))
-			if os.path.exists(raw_data_dir+site_id+"/"+site_id+"_wStat.feather"):
+			if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
 				site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+"_wStat.feather")
 				site_df['site_id'] = site_id
 				site_df = pd.merge(land_use[land_use['nhdr_id']==site_id], site_df,left_on='nhdr_id',right_on='site_id')
