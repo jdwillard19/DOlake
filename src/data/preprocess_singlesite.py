@@ -32,6 +32,7 @@ if not hardcode:
 			print("pre: site ",i,"/",len(site_ids))
 			if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
 				site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
+				pdb.set_trace()
 				site_df['site_id'] = site_id
 				total_df = pd.concat([total_df,site_df])
 			else:
