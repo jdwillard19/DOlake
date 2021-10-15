@@ -57,7 +57,7 @@ if not hardcode:
 	else:
 		total_df = pd.read_feather("./temp/all_site_feats.feather")
 
-	total_feat_df = total_df.drop(['date','datetime','site_id','fentr_hyp','index'],axis=1)
+	total_feat_df = total_df.drop(['date','datetime','site_id','fentr_hyp'],axis=1)
 	total_feat_df = total_df[all_feats]
 	total_feat_df = total_feat_df.fillna(value=np.nan)
 	mean_feats = []
