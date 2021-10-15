@@ -135,11 +135,11 @@ for i,site_id in enumerate(site_ids):
 			current_window_length += 1
 			
 	#create sliding windows for pre-train,train, and test
-	pt_data = np.empty((0,seq_len,len(pt_fields)))
+	pt_data = np.empty((0,seq_len,len(pt_fields_wStat)))
 	pt_dates = np.empty((0,seq_len),dtype=np.datetime64)
-	trn_data = np.empty((0,seq_len,len(trn_test_fields)))
+	trn_data = np.empty((0,seq_len,len(trn_test_fields_wStat)))
 	trn_dates = np.empty((0,seq_len),dtype=np.datetime64)
-	tst_data = np.empty((0,seq_len,len(trn_test_fields)))
+	tst_data = np.empty((0,seq_len,len(trn_test_fields_wStat)))
 	tst_dates = np.empty((0,seq_len),dtype=np.datetime64)
 
 	#for each strat period, append to data matrices
@@ -148,7 +148,7 @@ for i,site_id in enumerate(site_ids):
 		start_ind = 0
 		end_ind = start_ind + seq_len
 		while end_ind < strat_period.shape[0]:
-			to_append_pt = np.expand_dims(strat_period[start_ind:end_ind][pt_fields].values,0)
+			to_append_pt = np.expand_dims(strat_period[start_ind:end_ind][pt_fields_wStat].values,0)
 			pt_data = np.concatenate((pt_data,to_append_pt),axis=0)
 			tmp_df = strat_period[start_ind:end_ind]
 			#if no obs, continue
@@ -158,7 +158,7 @@ for i,site_id in enumerate(site_ids):
 				#if train data, append to train data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==0)).any():
 					# print("time to append trn data")
-					to_append_trn = np.expand_dims(tmp_df[trn_test_fields].values,0)
+					to_append_trn = np.expand_dims(tmp_df[trn_test_fields_wStat].values,0)
 					#delete test data in train seq
 					if np.where(tmp_df[tmp_df['splitsample']==1])[0].shape[0] != 0:
 						tst_ind_to_del = np.where(tmp_df['splitsample']==1)[0]
@@ -171,7 +171,7 @@ for i,site_id in enumerate(site_ids):
 				#if test data, append to tst data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==1)).any():
 					# print("time to append tst data")
-					to_append_tst = np.expand_dims(tmp_df[trn_test_fields].values,0)
+					to_append_tst = np.expand_dims(tmp_df[trn_test_fields_wStat].values,0)
 					if np.where(tmp_df[tmp_df['splitsample']==0])[0].shape[0] != 0:
 						# print("time to delete train obs in test seq")
 						trn_ind_to_del = np.where(tmp_df['splitsample']==0)[0]
@@ -187,7 +187,7 @@ for i,site_id in enumerate(site_ids):
 			#get last sequence which starts at end_ind - seq_length
 			end_ind = strat_period.shape[0] - 1
 			start_ind = end_ind - seq_len
-			to_append_pt = np.expand_dims(strat_period[start_ind:end_ind][pt_fields].values,0)
+			to_append_pt = np.expand_dims(strat_period[start_ind:end_ind][pt_fields_wStat].values,0)
 			pt_data = np.concatenate((pt_data,to_append_pt),axis=0)
 			tmp_df = strat_period[start_ind:end_ind]
 			#if no obs, continue
@@ -195,7 +195,7 @@ for i,site_id in enumerate(site_ids):
 				to_append_dates = np.expand_dims(tmp_df['datetime'].values,0)
 				#if train data, append to train data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==0)).any():
-					to_append_trn = np.expand_dims(tmp_df[trn_test_fields].values,0)
+					to_append_trn = np.expand_dims(tmp_df[trn_test_fields_wStat].values,0)
 					#delete test data in train seq
 					if np.where(tmp_df[tmp_df['splitsample']==1])[0].shape[0] != 0:
 						tst_ind_to_del = np.where(tmp_df['splitsample']==1)[0]
@@ -207,7 +207,7 @@ for i,site_id in enumerate(site_ids):
 
 				#if test data, append to tst data
 				if ((not pd.isnull(tmp_df['obs_hyp']).all()) & (tmp_df['splitsample']==1)).any():
-					to_append_tst = np.expand_dims(tmp_df[trn_test_fields].values,0)
+					to_append_tst = np.expand_dims(tmp_df[trn_test_fields_wStat].values,0)
 					if np.where(tmp_df[tmp_df['splitsample']==0])[0].shape[0] != 0:
 						# print("time to delete train obs in test seq")
 						trn_ind_to_del = np.where(tmp_df['splitsample']==0)[0]
@@ -223,14 +223,14 @@ for i,site_id in enumerate(site_ids):
 	tst_data_norm[:,:,:-1] = (tst_data_norm[:,:,:-1] - mean_feats[:-2]) / std_feats[:-2]
 	pt_data_norm[:,:,:-1] = (pt_data_norm[:,:,:-1] - mean_feats[:-2]) / std_feats[:-2]
 
-	pt_data_path = "../../data/processed/"+site_id+"/pt"
-	pt_norm_data_path = "../../data/processed/"+site_id+"/pt_norm"
+	pt_data_path = "../../data/processed/"+site_id+"/pt_wStat"
+	pt_norm_data_path = "../../data/processed/"+site_id+"/pt_norm_wStat"
 	pt_dates_path = "../../data/processed/"+site_id+"/pt_dates"
-	trn_data_path = "../../data/processed/"+site_id+"/trn"
-	trn_norm_data_path = "../../data/processed/"+site_id+"/trn_norm"
+	trn_data_path = "../../data/processed/"+site_id+"/trn_wStat"
+	trn_norm_data_path = "../../data/processed/"+site_id+"/trn_norm_wStat"
 	trn_dates_path = "../../data/processed/"+site_id+"/trn_dates"
-	tst_data_path = "../../data/processed/"+site_id+"/tst"
-	tst_norm_data_path = "../../data/processed/"+site_id+"/tst_norm"
+	tst_data_path = "../../data/processed/"+site_id+"/tst_wStat"
+	tst_norm_data_path = "../../data/processed/"+site_id+"/tst_norm_wStat"
 	tst_dates_path = "../../data/processed/"+site_id+"/tst_dates"
 
 	np.save(pt_data_path,pt_data)
