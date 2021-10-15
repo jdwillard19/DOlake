@@ -21,7 +21,7 @@ obs_pt = ['o2_hyp']
 obs_name = ['obs_hyp']
 pt_fields = dyn_feats + obs_pt
 trn_test_fields = dyn_feats + obs_name
-all_feats = dyn_feats + stat_feats + 
+all_feats = dyn_feats + stat_feats + land_use_stat_feats
 win_shift = 30
 seq_len = 60
 
