@@ -107,7 +107,10 @@ if not os.path.exists("../../data/processed"):
 for i,site_id in enumerate(site_ids):
 	# site_id = 'nhdhr_120018027'
 	print("processing site ",i,"/",len(site_ids),": ",site_id)
-	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+"_wStat.feather")
+	site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
+	site_df['site_id'] = site_id
+	site_df = pd.merge(land_use[land_use['nhdr_id']==site_id], site_df,left_on='nhdr_id',right_on='site_id')
+	site_df.drop(['nhdr_id'],axis=1,inplace=True)
 	feats = site_df[all_feats]
 	dates = site_df['datetime']
 	# site_id = site_df['site_id']
