@@ -14,11 +14,14 @@ dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 
 			  # fentr_hyp all none?
 stat_feats = ["area_surface","max.d"]
+land_use_stat_feats = ["water","developed","barren","forest","shrubland",
+					   "herbaceous","cultivated","wetlands","is_developed",
+					   "is_forest","is_wetlands"]
 obs_pt = ['o2_hyp']
 obs_name = ['obs_hyp']
 pt_fields = dyn_feats + obs_pt
 trn_test_fields = dyn_feats + obs_name
-all_feats = dyn_feats + stat_feats
+all_feats = dyn_feats + stat_feats + 
 win_shift = 30
 seq_len = 60
 
@@ -33,6 +36,7 @@ if not hardcode:
 			if os.path.exists(raw_data_dir+site_id+"/"+site_id+".feather"):
 				site_df = pd.read_feather(raw_data_dir+site_id+"/"+site_id+".feather")
 				site_df['site_id'] = site_id
+				pdb.set_trace()
 				total_df = pd.concat([total_df,site_df])
 			else:
 				print("no file?")
