@@ -53,7 +53,7 @@ if not hardcode:
 			else:
 				print("no file?")
 				continue
-			pdb.set_trace()
+			total_df.reset_index(inplace=True)
 			total_df.to_feather("./temp/all_site_feats_wStat.feather")
 	else:
 		total_df = pd.read_feather("./temp/all_site_feats_wStat.feather")
