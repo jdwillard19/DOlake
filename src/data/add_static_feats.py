@@ -147,6 +147,8 @@ for i,site_id in enumerate(site_ids):
 	new_pt_norm[:,:,stat_feat_inds] = stat_feats_norm
 	new_pt_norm[:,:,-1] = pt_norm[:,:,-1] #obs
 
+	new_trntst = np.vstack((new_trn,new_tst))
+	new_trntst_norm = np.vstack((new_trn_norm,new_tst_norm))
 	pdb.set_trace()
 
 	pt_data_path = "../../data/processed/"+site_id+"/pt_wStat"
