@@ -102,7 +102,9 @@ for i,site_id in enumerate(site_ids):
 	dyn_feat_inds = np.arange(0,14,dtype=np.int16)
 	stat_feat_inds = np.arange(14,30,dtype=np.int16)
 
-	pdb.set_trace()
+	if total_df[total_df['site_id']==site_id].shape[0] == 0:
+		print("not enough data")
+		continue
 	stat_feats = total_df[total_df['site_id']==site_id].iloc[0][stat_feat_names+land_use_stat_feats].values.astype(float)
 	stat_feats_norm = (stat_feats - mean_feats[n_dyn:])/std_feats[n_dyn:]
 	#new structs
