@@ -117,7 +117,10 @@ for i,site_id in enumerate(site_ids):
 	new_pt[:] = np.nan
 	new_pt_norm = np.empty((pt_norm.shape[0],pt_norm.shape[1],pt_norm.shape[2]+n_static),dtype=np.float32)
 	new_pt_norm[:] = np.nan
-
+	new_trntst = np.empty((trn.shape[0]+tst.shape[0],trn.shape[1],trn.shape[2]+n_static),dtype=np.float32)
+	new_trntst[:] = np.nan
+	new_trntst_norm = np.empty((trn_norm.shape[0]+tst_norm.shape[0],trn_norm.shape[1],trn_norm.shape[2]+n_static),dtype=np.float32)
+	new_trntst_norm[:] = np.nan
 	#add data to each
 	new_trn[:,:,dyn_feat_inds] = trn[:,:,dyn_feat_inds] #dyn feats
 	new_trn[:,:,stat_feat_inds] = stat_feats
@@ -144,13 +147,16 @@ for i,site_id in enumerate(site_ids):
 	new_pt_norm[:,:,stat_feat_inds] = stat_feats_norm
 	new_pt_norm[:,:,-1] = pt_norm[:,:,-1] #obs
 
+	pdb.set_trace()
+
 	pt_data_path = "../../data/processed/"+site_id+"/pt_wStat"
 	pt_norm_data_path = "../../data/processed/"+site_id+"/pt_norm_wStat"
 	trn_data_path = "../../data/processed/"+site_id+"/trn_wStat"
 	trn_norm_data_path = "../../data/processed/"+site_id+"/trn_norm_wStat"
 	tst_data_path = "../../data/processed/"+site_id+"/tst_wStat"
 	tst_norm_data_path = "../../data/processed/"+site_id+"/tst_norm_wStat"
-
+	trntst_data_path = "../../data/processed/"+site_id+"/trntst_wStat"
+	trntst_norm_data_path = "../../data/processed/"+site_id+"/trntst_norm_wStat"
 	np.save(pt_data_path,new_pt)
 	np.save(pt_norm_data_path,new_pt_norm)
 	np.save(trn_data_path,new_trn)
