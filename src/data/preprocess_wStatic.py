@@ -39,7 +39,7 @@ seq_len = 60
 
 #get features and calc stats\
 total_df = pd.DataFrame(columns=all_feats)
-hardcode = False
+hardcode = True
 if not hardcode:
 	if not os.path.exists("./temp/all_site_feats_wStat.feather"):
 		for i,site_id in enumerate(site_ids):
@@ -75,6 +75,10 @@ else:
 	total_df = pd.read_feather("./temp/all_site_feats_wStat.feather")
 	total_df = total_df.fillna(value=np.nan)
 	total_feat_df = total_df.drop(['date','datetime','site_id'],axis=1)
+	mean_feats = np.load("temp/mean_feats.npy")
+	std_feats = np.load("temp/std_feats.npy")
+
+pdb.set_trace()
 
 #code to check number of stratification sequences
 # min_seq = 999
