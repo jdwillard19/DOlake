@@ -78,6 +78,36 @@ else:
 	mean_feats = np.load("temp/mean_feats.npy")
 	std_feats = np.load("temp/std_feats.npy")
 
+#number of static features we're adding
+n_static = 16
+
+for i,site_id in enumerate(site_ids):
+	# site_id = 'nhdhr_120018027'
+	print("processing site ",i,"/",len(site_ids),": ",site_id)
+
+	dir_path = "../../data/processed/"+site_id+"/"
+
+	#load old
+	trn = np.load(dir_path+"trn.npy",allow_pickle=True)
+	trn_norm = np.load(dir_path+"trn_norm.npy",allow_pickle=True)
+	tst = np.load(dir_path+"tst.npy",allow_pickle=True)
+	tst_norm = np.load(dir_path+"tst_norm.npy",allow_pickle=True)
+	pt = np.load(dir_path+"pt.npy",allow_pickle=True)
+	pt_norm = np.load(dir_path+"pt_norm.npy",allow_pickle=True)
+
+
+	#add data to each
+
+	new_trn = np.empty((trn.shape[0],trn.shape[1],trn.shape[2]+n_static))
+	new_trn_norm = np.empty((trn_norm.shape[0],trn_norm.shape[1],trn_norm.shape[2]+n_static))
+	new_tst = np.empty((tst.shape[0],tst.shape[1],tst.shape[2]+n_static))
+	new_tst_norm = np.empty((tst_norm.shape[0],tst_norm.shape[1],tst_norm.shape[2]+n_static))
+	new_pt = np.empty((pt.shape[0],pt.shape[1],pt.shape[2]+n_static))
+	new_trn = np.empty((pt_norm.shape[0],pt_norm.shape[1],pt_norm.shape[2]+n_static))
+
+	#move obs to last columns
+	pdb.set_trace()
+
 
 #code to check number of stratification sequences
 # min_seq = 999
@@ -98,8 +128,8 @@ else:
 # print("min seq: ",min_seq)
 # print("min ind: ",min_ind)
 
-mean_feats = np.array(mean_feats)
-std_feats = np.array(std_feats)
+# mean_feats = np.array(mean_feats)
+# std_feats = np.array(std_feats)
 
 
 #preprocess per site
