@@ -96,7 +96,7 @@ for i,site_id in enumerate(site_ids):
 	tst = np.array(np.load(dir_path+"tst.npy",allow_pickle=True),dtype=np.float32)
 	tst_norm = np.array(np.load(dir_path+"tst_norm.npy",allow_pickle=True),dtype=np.float32)
 	pt = np.array(np.load(dir_path+"pt.npy",allow_pickle=True),dtype=np.float32)
-	pt_norm = np.array(np.load(dir_path+"pt_norm.npy",allow_pickle=True),dtype=np.float32
+	pt_norm = np.array(np.load(dir_path+"pt_norm.npy",allow_pickle=True),dtype=np.float32)
 
 
 	dyn_feat_inds = np.arange(0,14,dtype=np.int16)
