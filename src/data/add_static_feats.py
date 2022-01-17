@@ -3,6 +3,9 @@ import pandas as pd
 import pdb
 import os
 
+######################################################################3
+# adds static features to existing preprocessed data for 201 lakes
+#########################################################################
 
 #get list of lakes
 raw_data_dir = '../../data/raw/DOzip/'
@@ -80,7 +83,7 @@ else:
 
 #number of static features we're adding
 n_static = 16
-
+n_dyn = 14
 for i,site_id in enumerate(site_ids):
 	# site_id = 'nhdhr_120018027'
 	print("processing site ",i,"/",len(site_ids),": ",site_id)
@@ -96,8 +99,12 @@ for i,site_id in enumerate(site_ids):
 	pt_norm = np.load(dir_path+"pt_norm.npy",allow_pickle=True)
 
 
-	#add data to each
+	dyn_feat_inds = np.arange(0,15,dtype=np.int16)
+	stat_feat_inds = np.arange(15,31,dtype=np.int16)
 
+	stat_feats = total_df[total_df['site_id']==site_id].iloc[0][stat_feats+land_use_stat_feats].values.astype(float)
+	stat_feats_norm = (stat_feats - mean_feats[n_dyn:])/std_feats[n_dyn:]
+	#new structs
 	new_trn = np.empty((trn.shape[0],trn.shape[1],trn.shape[2]+n_static))
 	new_trn_norm = np.empty((trn_norm.shape[0],trn_norm.shape[1],trn_norm.shape[2]+n_static))
 	new_tst = np.empty((tst.shape[0],tst.shape[1],tst.shape[2]+n_static))
@@ -105,8 +112,12 @@ for i,site_id in enumerate(site_ids):
 	new_pt = np.empty((pt.shape[0],pt.shape[1],pt.shape[2]+n_static))
 	new_trn = np.empty((pt_norm.shape[0],pt_norm.shape[1],pt_norm.shape[2]+n_static))
 
-	#move obs to last columns
+	#add data to each
+	new_trn[dyn_feat_inds] = trn[dyn_feat_inds]
 	pdb.set_trace()
+	# new_trn[stat_feat_inds]
+	#fil
+	# pdb.set_trace()
 
 
 #code to check number of stratification sequences
