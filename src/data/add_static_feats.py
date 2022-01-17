@@ -99,8 +99,8 @@ for i,site_id in enumerate(site_ids):
 	pt_norm = np.load(dir_path+"pt_norm.npy",allow_pickle=True)
 
 
-	dyn_feat_inds = np.arange(0,15,dtype=np.int16)
-	stat_feat_inds = np.arange(15,31,dtype=np.int16)
+	dyn_feat_inds = np.arange(0,14,dtype=np.int16)
+	stat_feat_inds = np.arange(14,30,dtype=np.int16)
 
 	stat_feats = total_df[total_df['site_id']==site_id].iloc[0][stat_feats+land_use_stat_feats].values.astype(float)
 	stat_feats_norm = (stat_feats - mean_feats[n_dyn:])/std_feats[n_dyn:]
