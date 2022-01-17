@@ -91,12 +91,12 @@ for i,site_id in enumerate(site_ids):
 	dir_path = "../../data/processed/"+site_id+"/"
 
 	#load old
-	trn = np.load(dir_path+"trn.npy",allow_pickle=True)
-	trn_norm = np.load(dir_path+"trn_norm.npy",allow_pickle=True)
-	tst = np.load(dir_path+"tst.npy",allow_pickle=True)
-	tst_norm = np.load(dir_path+"tst_norm.npy",allow_pickle=True)
-	pt = np.load(dir_path+"pt.npy",allow_pickle=True)
-	pt_norm = np.load(dir_path+"pt_norm.npy",allow_pickle=True)
+	trn = np.array(np.load(dir_path+"trn.npy",allow_pickle=True),dtype=np.float32)
+	trn_norm = np.array(np.load(dir_path+"trn_norm.npy",allow_pickle=True),dtype=np.float32)
+	tst = np.array(np.load(dir_path+"tst.npy",allow_pickle=True),dtype=np.float32)
+	tst_norm = np.array(np.load(dir_path+"tst_norm.npy",allow_pickle=True),dtype=np.float32)
+	pt = np.array(np.load(dir_path+"pt.npy",allow_pickle=True),dtype=np.float32)
+	pt_norm = np.array(np.load(dir_path+"pt_norm.npy",allow_pickle=True),dtype=np.float32
 
 
 	dyn_feat_inds = np.arange(0,14,dtype=np.int16)
@@ -105,21 +105,20 @@ for i,site_id in enumerate(site_ids):
 	stat_feats = total_df[total_df['site_id']==site_id].iloc[0][stat_feats+land_use_stat_feats].values.astype(float)
 	stat_feats_norm = (stat_feats - mean_feats[n_dyn:])/std_feats[n_dyn:]
 	#new structs
-	new_trn = np.empty((trn.shape[0],trn.shape[1],trn.shape[2]+n_static))
+	new_trn = np.empty((trn.shape[0],trn.shape[1],trn.shape[2]+n_static),dtype=np.float32)
 	new_trn[:] = np.nan
-	new_trn_norm = np.empty((trn_norm.shape[0],trn_norm.shape[1],trn_norm.shape[2]+n_static))
+	new_trn_norm = np.empty((trn_norm.shape[0],trn_norm.shape[1],trn_norm.shape[2]+n_static),dtype=np.float32)
 	new_trn_norm[:] = np.nan
-	new_tst = np.empty((tst.shape[0],tst.shape[1],tst.shape[2]+n_static))
+	new_tst = np.empty((tst.shape[0],tst.shape[1],tst.shape[2]+n_static),dtype=np.float32)
 	new_tst[:] = np.nan
-	new_tst_norm = np.empty((tst_norm.shape[0],tst_norm.shape[1],tst_norm.shape[2]+n_static))
+	new_tst_norm = np.empty((tst_norm.shape[0],tst_norm.shape[1],tst_norm.shape[2]+n_static),dtype=np.float32)
 	new_tst_norm[:] = np.nan
-	new_pt = np.empty((pt.shape[0],pt.shape[1],pt.shape[2]+n_static))
+	new_pt = np.empty((pt.shape[0],pt.shape[1],pt.shape[2]+n_static),dtype=np.float32)
 	new_pt[:] = np.nan
-	new_pt_norm = np.empty((pt_norm.shape[0],pt_norm.shape[1],pt_norm.shape[2]+n_static))
+	new_pt_norm = np.empty((pt_norm.shape[0],pt_norm.shape[1],pt_norm.shape[2]+n_static),dtype=np.float32)
 	new_pt_norm[:] = np.nan
 
 	#add data to each
-
 	new_trn[:,:,dyn_feat_inds] = trn[:,:,dyn_feat_inds] #dyn feats
 	new_trn[:,:,stat_feat_inds] = stat_feats
 	new_trn[:,:,-1] = trn[:,:,-1] #obs
@@ -127,7 +126,24 @@ for i,site_id in enumerate(site_ids):
 	new_trn_norm[:,:,dyn_feat_inds] = trn_norm[:,:,dyn_feat_inds] #dyn feats
 	new_trn_norm[:,:,stat_feat_inds] = stat_feats_norm
 	new_trn_norm[:,:,-1] = trn_norm[:,:,-1] #obs
-	pdb.set_trace()
+
+
+	new_tst[:,:,dyn_feat_inds] = tst[:,:,dyn_feat_inds] #dyn feats
+	new_tst[:,:,stat_feat_inds] = stat_feats
+	new_tst[:,:,-1] = tst[:,:,-1] #obs
+
+	new_tst_norm[:,:,dyn_feat_inds] = tst_norm[:,:,dyn_feat_inds] #dyn feats
+	new_tst_norm[:,:,stat_feat_inds] = stat_feats_norm
+	new_tst_norm[:,:,-1] = tst_norm[:,:,-1] #obs
+
+	new_pt[:,:,dyn_feat_inds] = pt[:,:,dyn_feat_inds] #dyn feats
+	new_pt[:,:,stat_feat_inds] = stat_feats
+	new_pt[:,:,-1] = pt[:,:,-1] #obs
+
+	new_pt_norm[:,:,dyn_feat_inds] = pt_norm[:,:,dyn_feat_inds] #dyn feats
+	new_pt_norm[:,:,stat_feat_inds] = stat_feats_norm
+	new_pt_norm[:,:,-1] = pt_norm[:,:,-1] #obs
+	# new_trn[stat_feat_inds]
 	# new_trn[stat_feat_inds]
 	#fil
 	# pdb.set_trace()
