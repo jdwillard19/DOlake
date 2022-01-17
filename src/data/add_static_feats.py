@@ -110,12 +110,12 @@ for i,site_id in enumerate(site_ids):
 	new_tst = np.empty((tst.shape[0],tst.shape[1],tst.shape[2]+n_static))
 	new_tst_norm = np.empty((tst_norm.shape[0],tst_norm.shape[1],tst_norm.shape[2]+n_static))
 	new_pt = np.empty((pt.shape[0],pt.shape[1],pt.shape[2]+n_static))
-	new_trn = np.empty((pt_norm.shape[0],pt_norm.shape[1],pt_norm.shape[2]+n_static))
+	new_pt_norm = np.empty((pt_norm.shape[0],pt_norm.shape[1],pt_norm.shape[2]+n_static))
 
 	#add data to each
-	pdb.set_trace()
 
-	new_trn[dyn_feat_inds] = trn[dyn_feat_inds]
+	new_trn[:,:,dyn_feat_inds] = trn[:,:,dyn_feat_inds]
+	pdb.set_trace()
 	# new_trn[stat_feat_inds]
 	#fil
 	# pdb.set_trace()
