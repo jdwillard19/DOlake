@@ -106,11 +106,17 @@ for i,site_id in enumerate(site_ids):
 	stat_feats_norm = (stat_feats - mean_feats[n_dyn:])/std_feats[n_dyn:]
 	#new structs
 	new_trn = np.empty((trn.shape[0],trn.shape[1],trn.shape[2]+n_static))
+	new_trn[:] = np.nan
 	new_trn_norm = np.empty((trn_norm.shape[0],trn_norm.shape[1],trn_norm.shape[2]+n_static))
+	new_trn_norm[:] = np.nan
 	new_tst = np.empty((tst.shape[0],tst.shape[1],tst.shape[2]+n_static))
+	new_tst[:] = np.nan
 	new_tst_norm = np.empty((tst_norm.shape[0],tst_norm.shape[1],tst_norm.shape[2]+n_static))
+	new_tst_norm[:] = np.nan
 	new_pt = np.empty((pt.shape[0],pt.shape[1],pt.shape[2]+n_static))
+	new_pt[:] = np.nan
 	new_pt_norm = np.empty((pt_norm.shape[0],pt_norm.shape[1],pt_norm.shape[2]+n_static))
+	new_pt_norm[:] = np.nan
 
 	#add data to each
 
