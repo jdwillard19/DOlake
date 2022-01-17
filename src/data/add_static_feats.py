@@ -120,7 +120,9 @@ for i,site_id in enumerate(site_ids):
 
 	#add data to each
 
-	new_trn[:,:,dyn_feat_inds] = trn[:,:,dyn_feat_inds]
+	new_trn[:,:,dyn_feat_inds] = trn[:,:,dyn_feat_inds] #dyn feats
+	new_trn[:,:,stat_feat_inds] = stat_feats
+	new_trn[:,:,-1] = trn[:,:,-1] #obs
 	pdb.set_trace()
 	# new_trn[stat_feat_inds]
 	#fil
