@@ -24,7 +24,7 @@ dyn_feats = ["thermocline_depth","temperature_epi","temperature_hypo",\
 			  "o2_epi"]
 
 			  # fentr_hyp all none?
-stat_feats = ["area_surface","max.d"]
+stat_feat_names = ["area_surface","max.d"]
 land_use_stat_feats = ["water","developed","barren","forest","shrubland",
 					   "herbaceous","cultivated","wetlands","is_cultivated","is_developed",
 					   "is_forest","is_herbaceous","is_water","is_wetlands"]
@@ -33,9 +33,9 @@ obs_pt = ['o2_hyp']
 obs_name = ['obs_hyp']
 pt_fields = dyn_feats + obs_pt
 trn_test_fields = dyn_feats + obs_name
-pt_fields_wStat = dyn_feats + stat_feats + land_use_stat_feats + obs_pt
-trn_test_fields_wStat = dyn_feats + stat_feats + land_use_stat_feats + obs_name
-all_feats = dyn_feats + stat_feats + land_use_stat_feats
+pt_fields_wStat = dyn_feats + stat_feat_names + land_use_stat_feats + obs_pt
+trn_test_fields_wStat = dyn_feats + stat_feat_names + land_use_stat_feats + obs_name
+all_feats = dyn_feats + stat_feat_names + land_use_stat_feats
 win_shift = 30
 seq_len = 60
 
@@ -102,8 +102,7 @@ for i,site_id in enumerate(site_ids):
 	dyn_feat_inds = np.arange(0,14,dtype=np.int16)
 	stat_feat_inds = np.arange(14,30,dtype=np.int16)
 
-	pdb.set_trace()
-	stat_feats = total_df[total_df['site_id']==site_id].iloc[0][stat_feats+land_use_stat_feats].values.astype(float)
+	stat_feats = total_df[total_df['site_id']==site_id].iloc[0][stat_feat_names+land_use_stat_feats].values.astype(float)
 	stat_feats_norm = (stat_feats - mean_feats[n_dyn:])/std_feats[n_dyn:]
 	#new structs
 	new_trn = np.empty((trn.shape[0],trn.shape[1],trn.shape[2]+n_static),dtype=np.float32)
@@ -144,6 +143,9 @@ for i,site_id in enumerate(site_ids):
 	new_pt_norm[:,:,dyn_feat_inds] = pt_norm[:,:,dyn_feat_inds] #dyn feats
 	new_pt_norm[:,:,stat_feat_inds] = stat_feats_norm
 	new_pt_norm[:,:,-1] = pt_norm[:,:,-1] #obs
+
+	pdb.set_trace()
+	#save them
 	# new_trn[stat_feat_inds]
 	# new_trn[stat_feat_inds]
 	#fil
