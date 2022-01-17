@@ -123,6 +123,10 @@ for i,site_id in enumerate(site_ids):
 	new_trn[:,:,dyn_feat_inds] = trn[:,:,dyn_feat_inds] #dyn feats
 	new_trn[:,:,stat_feat_inds] = stat_feats
 	new_trn[:,:,-1] = trn[:,:,-1] #obs
+
+	new_trn_norm[:,:,dyn_feat_inds] = trn_norm[:,:,dyn_feat_inds] #dyn feats
+	new_trn_norm[:,:,stat_feat_inds] = stat_feats_norm
+	new_trn_norm[:,:,-1] = trn_norm[:,:,-1] #obs
 	pdb.set_trace()
 	# new_trn[stat_feat_inds]
 	#fil
