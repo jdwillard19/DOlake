@@ -113,8 +113,9 @@ for i,site_id in enumerate(site_ids):
 	new_trn = np.empty((pt_norm.shape[0],pt_norm.shape[1],pt_norm.shape[2]+n_static))
 
 	#add data to each
-	new_trn[dyn_feat_inds] = trn[dyn_feat_inds]
 	pdb.set_trace()
+
+	new_trn[dyn_feat_inds] = trn[dyn_feat_inds]
 	# new_trn[stat_feat_inds]
 	#fil
 	# pdb.set_trace()
